@@ -1,0 +1,27 @@
+{
+  "name": "timdev/php-stack-logger",
+  "description": "A PSR-3 Logger that can track context.",
+  "version": "0.1",
+  "type": "library",
+  "require": {
+    "php": ">=7.3",
+    "psr/log": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "TimDev\\StackLogger\\": "src/",
+      "TimDev\\StackLogger\\Test\\": "tests/"
+    }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tim Lieberman",
+      "email": "tim@timdev.com"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^9",
+    "monolog/monolog": "^2.1"
+  }
+}
