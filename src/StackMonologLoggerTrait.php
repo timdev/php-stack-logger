@@ -39,11 +39,12 @@ trait StackMonologLoggerTrait
      * if we were not using a trait here, we could specify the return type as `self`, but PHP won't allow us to do that
      * from a trait for some reason. 
      * 
-     * To deal with it, we explicitly hint \Monolog\Logger, and add a phpDoc directives specifying `self`. Somehow, this
-     * manages to satisify both the PHP runtime and my (Jetbrains) IDE. Would love to find a more elegant fix for this.
+     * To deal with it, we explicitly (and imprecisely) hint \Monolog\Logger, and add a phpDoc directives specifying
+     * `static`. This manages to satisfy both the PHP runtime and my (Jetbrains) IDE. In a PHP8 future, once Monolog
+     * updates the return type of withName() to be static, we can use static here as well.
      * 
      * @param string $name
-     * @return self
+     * @return static
      */
     public function withName(string $name): \Monolog\Logger
     {
