@@ -6,95 +6,76 @@ declare(strict_types=1);
 namespace TimDev\StackLogger\Test;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Log\Test\TestLogger;
-use TimDev\StackLogger\Logger;
 
 final class LoggerTest extends TestCase
 {
-    private $testLogger;
+    /**
+     * The real/main/top/root logger. Since we're using a TestLogger, this is where records are accumulated.
+     * 
+     * @var ExtendedTestLogger 
+     */
+    private $log;
     
     public function setUp(): void
     {
-        $this->testLogger = new TestLogger();
+        $this->log = new ExtendedTestLogger();
     }
     
-    public function testCanWrapLogger()
+    public function testLogsMessages()
     {
-        $logger = new Logger($this->testLogger);
-        $logger->info('Log me some message');
-        $this->assertTrue($this->testLogger->hasInfoThatContains('Log me'));
+        $this->log->info('Log me some message');
+        $this->log->warning('Log me some warning.');
+        $this->assertTrue($this->log->hasInfoThatContains('Log me'));
+        $this->assertTrue($this->log->hasWarningThatContains('warning.'));
     }
     
-    public function testAcceptsContextInConstructor()
+    public function testCanCreateChild()
     {
-        $logger = new Logger($this->testLogger, ['initial' => 'context']);
-        $logger->debug('I should have some context from my constructor arg');
-        $this->assertEquals('context', $this->testLogger->records[0]['context']['initial']);
+        $log = $this->log->child(['initial' => 'context']);
+        $log->debug('I should have some context from my constructor arg');
+        $this->assertEquals('context', $this->log->records[0]['context']['initial']);
     }
     
-    public function testCorrectlyAccumulatesContext()
+    public function testAccumulatesContext()
     {
-        $logger = new Logger($this->testLogger, ['initial' => 'context']);
-        $child = $logger->child(['more' => 'context']);
+        $log = $this->log->child(['initial' => 'context']);
+        $child = $log->child(['more' => 'context']);
         $child->warning('I should have three context items', ['final' => 'context']);
-        $this->assertCount(3, $this->testLogger->records[0]['context']);
+        $this->assertCount(3, $this->log->contextAt(0));
         $this->assertEquals(
-            ['initial', 'more', 'final'], 
-            array_keys($this->testLogger->records[0]['context'])
+            ['initial', 'more', 'final'],
+            $this->log->contextKeysAt(0)
         );
     }
     
-    public function testCorrectlyMergesContext()
+    public function textMergesContext()
     {
-        $logger = new Logger($this->testLogger, ['a' => 'Alice']);
-        $logger
+        $log = $this->log->child(['a' => 'Alice']);
+        $log
             ->child(['a' => 'Allison', 'b' => 'Bob'])
             ->info('Should be Allison and Bruno', ['b' => 'Bruno']);
         $this->assertEquals(
             ['Allison', 'Bruno'], 
-            array_values($this->testLogger->records[0]['context'])
+            $this->log->contextValuesAt(0)
         );
     }
     
     public function testInvokesCallables()
     {
-        $logger = new Logger($this->testLogger);
+        $logger = $this->log;
         $child = $logger->child([
             'counter' => function(array $ctx){
                 return count($ctx);
             }
         ]);
         $child->notice('No context added to this message');
-        $this->assertEquals(1, $this->testLogger->records[0]['context']['counter']);
+        $this->assertEquals(1, $this->log->contextAt(0)['counter']);
         
         $child = $child->child(['Second' => 'Context Item']);
         $child->warning('A log with three context items.', ['Third' => 'Context Item']);
         $this->assertEquals(
-            count($this->testLogger->records[1]['context']),     // === 3
-            $this->testLogger->records[1]['context']['counter']
+            $this->log->contextCountAt(1),     // === 3  
+            $this->log->records[1]['context']['counter']
         );
-    }
-    
-    public function testProxiesSimpleMethodCalls()
-    {
-        $logger = new Logger(new ExtendedTestLogger());
-        $this->assertEquals('FOO', $logger->toUpper('foo'));
-    }
-    
-    public function testWrapsLoggerInterfaceProxyReturnValues()
-    {
-        $logger = new Logger(new ExtendedTestLogger());
-        $renamed = $logger->withName('CustomName');
-        $this->assertInstanceOf(Logger::class, $renamed);
-        $this->assertEquals('CustomName', $renamed->getName());
-    }
-    
-    public function testLogsWarningOnInvalidMethodProxy()
-    {
-        
-        $logger = new Logger($this->testLogger);
-        $fail = $logger->methodDoesNotExist();
-        $this->assertFalse($fail);
-        $this->assertTrue($this->testLogger->hasWarningThatContains("logger doesn't know how to"));
     }
 }

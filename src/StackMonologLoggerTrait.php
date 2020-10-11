@@ -16,8 +16,10 @@ trait StackMonologLoggerTrait
 
     public function addRecord(int $level, string $message, array $context = []): bool
     {
-        // recursively accumulate context up the chain of ancestry
+        // merge any passed context on top of my own
         $context = array_replace($this->context, $context);
+        
+        // recursively accumulate context up the chain of ancestry
         if ($this->parent){
             $this->parent->addRecord($level, $message, $context);
             return true;
@@ -28,6 +30,29 @@ trait StackMonologLoggerTrait
             return is_callable($c) ? $c($context) : $c;
         }, $context);
         return parent::addRecord($level, $message, $context);
+    }
+
+    /**
+     * This method from Monolog is special because it returns a clone.
+     * 
+     * Note: the return type hint must be \Monolog\Logger to stay compatible with the parent method's signature. Oddly,
+     * if we were not using a trait here, we could specify the return type as `self`, but PHP won't allow us to do that
+     * from a trait for some reason. 
+     * 
+     * To deal with it, we explicitly hint \Monolog\Logger, and add a phpDoc directives specifying `self`. Somehow, this
+     * manages to satisify both the PHP runtime and my (Jetbrains) IDE. Would love to find a more elegant fix for this.
+     * 
+     * @param string $name
+     * @return self
+     */
+    public function withName(string $name): \Monolog\Logger
+    {
+        $new = parent::withName($name);
+        $new->parent = null;
+        $new->context = $this->parent 
+            ? array_replace($this->parent->context, $this->context)
+            : $this->context;
+        return $new;
     }
     
 }

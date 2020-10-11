@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace TimDev\StackLogger;
 
 trait StackLoggerTrait
-{
+{    
     /** @var array */
-    private $context = [];
+    protected $context = [];
     
     /** @var self|null */
-    private $parent = null;
-
+    protected $parent = null;
+    
     /**
      * {@inheritdoc}
      */

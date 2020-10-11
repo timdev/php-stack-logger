@@ -6,38 +6,39 @@ declare(strict_types=1);
 namespace TimDev\StackLogger\Test;
 
 use Monolog\Handler\TestHandler;
-use Monolog\Logger as MonologLogger;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\Test\TestLogger;
-use TimDev\StackLogger\Logger;
 
 final class MonologTest extends TestCase
 {
-    private $monolog;
+    private $log;
     private $handler;
     
     public function setUp(): void
     {
-        $this->monolog = new MonologLogger('test');
+        $this->log = new ExtendedMonologLogger('test');
         $this->handler = new TestHandler();
-        $this->monolog->pushHandler($this->handler);
+        $this->log->pushHandler($this->handler);
     }
-    
+        
     public function testCanHandleWithNameCalls()
     {
-        $logger = new Logger($this->monolog);
-        $child = $logger->child(['basic' => 'context']);
+        // push some context. 
+        $log = $this->log->child(['basic' => 'context']);
         
-        
-        /** @var Logger $newChannel */
-        $newChannel = $child->withName('other');
+        // get a clone with a new monolog channel-name, and log to it.
+        $newChannel = $log->withName('other');
         $newChannel->info('A message');
         
+        // ensure the handler has accumulated records with context attached.
         $rec = $this->handler->getRecords()[0];
         $this->assertEquals('other', $rec['channel']);
         $this->assertCount(1, $rec['context']);
+        $this->assertEquals('context', $rec['context']['basic']);
+        
+        /* 
+        This is mostly to prove that static analysis knows $newChannel is an ExtendedMonologLogger, even though 
+        `StackMonologLoggerTrait::withName(): \Monolog\Logger` tells us it isn't.          
+        */         
+        $this->assertTrue($newChannel->extraMethod());
     }
-    
-    
-    
 }
