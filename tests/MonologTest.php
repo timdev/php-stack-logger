@@ -6,18 +6,24 @@ declare(strict_types=1);
 namespace TimDev\StackLogger\Test;
 
 use Monolog\Handler\TestHandler;
-use PHPUnit\Framework\TestCase;
+use TimDev\StackLogger\Test\Support\ExtendedMonologLogger;
+use TimDev\StackLogger\Test\BaseTest;
+use TimDev\StackLogger\Test\Support\TestLoggerInterface;
 
-final class MonologTest extends TestCase
+/**
+ * Test against monolog.
+ * 
+ * Uses ExtendedMonologLogger as a subject, with additional test method(s) for monolog-specific stuff.
+ */
+class MonologTest extends BaseTest
 {
-    private $log;
-    private $handler;
+    /* PHP 7.4 doesn't support covariant typed properties 😢 */
+    /** @var ExtendedMonologLogger  */
+    protected TestLoggerInterface $log;
     
-    public function setUp(): void
+    protected function makeTestSubject(): ExtendedMonologLogger
     {
-        $this->log = new ExtendedMonologLogger('test');
-        $this->handler = new TestHandler();
-        $this->log->pushHandler($this->handler);
+        return  new ExtendedMonologLogger();
     }
         
     public function testCanHandleWithNameCalls()
@@ -30,7 +36,8 @@ final class MonologTest extends TestCase
         $newChannel->info('A message');
         
         // ensure the handler has accumulated records with context attached.
-        $rec = $this->handler->getRecords()[0];
+        $rec = $this->log->recordAt(0);
+        
         $this->assertEquals('other', $rec['channel']);
         $this->assertCount(1, $rec['context']);
         $this->assertEquals('context', $rec['context']['basic']);
