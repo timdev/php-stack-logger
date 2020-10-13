@@ -6,7 +6,7 @@ namespace TimDev\StackLogger\Test\Support;
 use DateTimeZone;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
-use TimDev\StackLogger\StackMonologLoggerTrait;
+use TimDev\StackLogger\MonologStackLoggerTrait;
 use TimDev\StackLogger\Test\Support\TestLoggerInterface;
 use TimDev\StackLogger\Test\Support\TestLoggerTrait;
 
@@ -16,7 +16,7 @@ use TimDev\StackLogger\Test\Support\TestLoggerTrait;
  */
 class ExtendedMonologLogger extends Logger implements TestLoggerInterface
 {
-    use StackMonologLoggerTrait;
+    use MonologStackLoggerTrait;
     use TestLoggerTrait;
 
     public function __construct()         
@@ -38,7 +38,7 @@ class ExtendedMonologLogger extends Logger implements TestLoggerInterface
     {
         return $this->getHandlers()[0]->getRecords();
     }
-    
+
 //    public function recordAt(int $index): ?array 
 //    {
 //        return $this->getRecords()[$index] ?? null;

@@ -26,7 +26,7 @@ class MonologTest extends BaseTest
         return  new ExtendedMonologLogger();
     }
         
-    public function testCanHandleWithNameCalls()
+    public function test_withName_cloning()
     {
         // push some context. 
         $log = $this->log->child(['basic' => 'context']);

@@ -7,31 +7,22 @@ namespace TimDev\StackLogger;
  * If you're extending a Monolog\Logger, and your code calls Monolog\Logger::addRecord() directly,
  * you can use this trait instead of StackLoggerTrait.
  */
-trait StackMonologLoggerTrait 
+trait MonologStackLoggerTrait 
 {
     use StackLoggerTrait;
 
     /**
      * {@inheritDoc}
-     * 
-     * Monolog predates PSR-3, and exposes a pubic `addRecord()` method, which it also uses internally (eschewing the
-     * more PSR3-friendly `log()`) in its implementation of the level-specific methods. So we need to override it here
-     * to preserve our context-accumulation and callable-handling features.
+     *
+     * Monolog predates PSR-3, and exposes a pubic `addRecord()` method, which contains the foundational logic, and upon
+     * which its implementation of log()/debug()/info()/... depend. So we override it here to preserve our
+     * context-accumulation and callable-handling features.
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
-        // merge any passed context on top of my own
-        $context = array_replace($this->context, $context);
-        
-        // process callable context elements
-        $context = array_map(function($c) use ($context) {
-            return is_callable($c) ? $c($context) : $c;
-        }, $context);
-        
-        // delegate to parent implementation.
+        $context = $this->processContext($context);
         return parent::addRecord($level, $message, $context);
     }
-
 
     /**
      * {@inheritDoc}
@@ -53,6 +44,5 @@ trait StackMonologLoggerTrait
         $new = parent::withName($name);
         $new->context = $this->context;
         return $new;
-    }
-    
+    }    
 }

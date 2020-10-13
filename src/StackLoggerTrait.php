@@ -5,20 +5,19 @@ namespace TimDev\StackLogger;
 
 
 trait StackLoggerTrait
-{    
-
+{
     protected array $context = [];
 
     /**
      * Many (but crucially, not all, you need to check!) PSR3 loggers use `log()` as the fundamental method for logging
-     * messages. In those cases, we can 
+     * messages. In those cases, we can
      */
     public function log($level, $message, array $context = []): void
     {
         // merge passed context on top of accumulated context,
         // and process callable context elements.
         $context = $this->processContext($context);
-        
+
         // actually log the message.
         parent::log($level, $message, $context);
     }
@@ -44,12 +43,11 @@ trait StackLoggerTrait
         $context = array_merge($this->context, $context);
 
         // handle any callables in final context.
-        $context = array_map(function($c) use ($context) {
-            return is_callable($c) ? $c($context) : $c;
-        }, $context);
-        
+        $context = array_map(
+            static fn($c) => is_callable($c) ? $c($context) : $c,
+            $context
+        );
+
         return $context;
     }
-
-    
 }

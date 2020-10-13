@@ -6,113 +6,98 @@ A PSR-3 Logger that can track context.
 
 Inspired by the [similar functionality] in [pinojs]. Implementation details differ, but the core idea remains.
 
-## Usage (Wrapping)
+## Approach
 
-### Instantiation
+This package provides a generic `StackLoggerTrait` that's suitable for use extending PSR-3 implementations that are
+patterned `\Psr\Log\AbstractLogger` or `\Psr\Log\LoggerTrait`, where all we need to do is intercept calls to `log()`.
+For such loggers, you can simply subclass the logger class and `use StackLoggerTrait`.
 
-This logger decorates any other PSR-3 logger. So, if you're like most people and using [monolog], you simply supply your
-monolog instance as the first constructor argument:
+Other implementations might require more work. [monolog], for example, predates PSR-3 and has at its core a method named
+`addRecord()` (Monolog's `log()`, as well as the level-specific methods all delegate to `addRecord()`). This package 
+ships a `MonologStackLoggerTrait` that extends `StackLoggerTrait` to intercept calls to `addRecord()` and `withName()` 
+(see comments in the source for more info).
 
-```php
-// set up your main logger.
-$monolog = new Monolog\Logger('myapp');
-$monolog->pushHandler(new Monolog\Handler\StreamHandler('php://output', Monolog\Logger::DEBUG));
+## Justification
 
-// Wrap it in StackLogger
-$logger = new TimDev\StackLogger\Logger($monolog);
-```
+After an initial attempt at implementation of a decorator that wraps a logger, it became increasing clear to me that 
+extending the logger implementation results in a simpler implementation. For instance, child loggers can have addtional
+processors or handlers added, without adding those to the parent. 
 
-### Initial Context
-
-If we want some context included in every message, we can supply that context via the constructor:
-
-```php
-$logger = new TimDev\StackLogger\Logger($loggerToWrap, ['some' => 'context']);
-$logger->info('Reticulated 7 splines'); 
-// =>  [2020-10-09 12:40:48] myapp.INFO: Reticulated 7 splines {"some": "context"}
-$logger->debug('Ate a bagel', ['foo' => 'bar']); 
-// => [2020-10-09 12:40:48] myapp.DEBUG: Ate a bagel {"some": "context", "foo": "bar"} 
-```
+## Usage
 
 ### Child Loggers
-
-Like in Pino, you can layer more context on top using child loggers. 
-
 ```php
-$logger = new Logger($loggerToWrap, ['some' => 'context']);
-$logger->info('Hello');
-// => [2020-10-09 12:40:48] myapp.INFO: Hello {"some": "context"}
+use TimDev\StackLogger\StackLoggerTrait;
 
-$child = $logger->child(['more' => 'cowbell']);
-$child->debug('Not fearing the reaper');
-// => [2020-10-09 12:40:48] myapp.DEBUG: Not fearing the reaper {"some": "context", "more": "cowbell"}
-
-# earlier context can be overwritten
-$grandchild = $child->child(["more" => "COWBELL!!!!"]);
-$grandchild->debug('Even More');
-// => [2020-10-09 12:40:48] myapp.DEBUG: Not fearing the reaper {"some": "context", "more": "COWBELL!!!!"}
-```
-
-### Callabes in Context
-
-Context can also contain closures with a signature `function(array $context): mixed`, where `$context` is the full 
-context.
-
-```php
-$startTime = null; 
-$elapsed = function($context){ return time() - $context['startTime']; };
-$child = $logger->child(['elapsed'=>$elapsed, 'startTime'=>$startTime);
-$startTime = time();
-doExpensiveThing();  // takes 60 seconds to run.
-$child->info('Finished doing expensive thing');
-// => [2020-10-09 12:40:48] myapp.DEBUG: Not fearing the reaper {"startTime": 1602247188, "elapsed": 60}
-```
-
-## Usage (Traits)
-
-### Motivation
-
-These traits are experimental.
-
-One drawback to using the wrapping method is that your application may actually depend on some logger has an interface
-larger than that defined by PSR-3. For instance, monolog exposes public [addRecord] and [withName] methods, and you
-may have existing application code that calls them. 
-
-To alleviate this, `TimDev\StackLogger\Logger` implements `__call` to proxy calls to non-PSR-3 methods to the wrapped
-logger. If the wrapped logger doesn't implement the method either, a WARNING is logged.
-
-The magic `__call()` approach works well enough, even though __call is somewhat smelly, and may make your IDE complain.
-
-The two traits included in this package provide an alternative approach, which may be better in the long-run.:
-
-* **StackLoggerTrait** - can generically extend any PSR-3 logger. It overrides the `log()` method on the base class, and
-                         exposes the `child()` method that enables the context-stacking functionality.
-                         
-* **StackMonologLoggerTrait** - extends `StackLoggerTrait` to override `Monolog\Logger::addRecord()` with an 
-                                implementation almost identical to `StackLoggerTrait::log()`.
-                         
-To use these traits, you create your own logger class that extends the main logger class, and applies one of the traits.
-
-**With Monolog**
-
-```php 
-class Logger extends \Monolog\Logger
+// Extend your favorite logger and apply the trait.
+class MyLogger extends \Psr\Log\NullLogger
 {
-    use TimDev\StackLogger\StackMonologLoggerTrait;
+    use StackLoggerTrait;
 }
 
-// It's 'just' monolog!
-$logger = new Logger('myapp');
-$logger->pushHandler(new Monolog\Handler\StreamHandler('php://output', Monolog\Logger::DEBUG));
+$mainLogger = new MyLogger();
 
-$logger->info('Hello, world');
+// it works like a regular PSR-3 logger.
+$mainLogger->info("Hello, World.");
+// => [2020-10-17 17:40:53] app.INFO: Hello, World.
+$mainLogger->info("Have some Context", ['my' => 'context']);
+// => [2020-10-17 17:40:53] app.INFO: Have some Context {"my": "context"}
 
-// But with a few new tricks:
-$child = $logger->child(['some' => 'context']);
-$child->addRecord
+// but you might want to accumulate some context
+$child1 = $mainLogger->child(['child' => 'context']);
+$child1->info('From a child.', ['call-time' => 'context']);
+// => [2020-10-17 17:40:53] app.INFO: From a child. {"child":"context","call-time":"context"}
+
+// but $mainLogger is still around, without the additional context.
+$mainLogger->info("Still here, with no accumulated context!");
+// => [2020-10-17 17:40:53] app.INFO: Still here, with no accumulated context!
 ```
 
+This can be useful in any situation where want to carry some context through successive calls.
 
+```php
+/**
+ * Imagine this is a long method that logs a bunch of stuff.
+ */
+function complexProcessing(User $user, LoggerInterface $logger){
+    $logger = $logger->child(['user-id' => $user->id]);
+    $logger->info("Begin processing");
+    // => [2020-10-17 17:40:53] app.INFO: Begin processing. { "user-id": 123 }
+    
+    foreach($user->getMemberships() as $membership){
+        $l = $logger->child(['membership_id'=>$membership->id]);
+        $l->info("Checking membership");
+        // => [2020-10-17 17:40:53] app.INFO: Checking membership. { "user-id": 123, 'membership-id' => 1001 }
+        if ($membership->isExpired()){
+            $l->info('Membership is expired, stopping early.', ['expired-at' => $membership->expiredAt]);
+            // => [2020-10-17 17:40:53] app.INFO: Membership is expired, stopping early. { "user-id": 123, "membership-id" => 1001, "expired-at": "2020-06-30T12:00:00Z' }
+            continue;
+        }
+        // ...
+        $l->info('Done handling membership');        
+        // => [2020-10-17 17:40:53] app.INFO: Done handling membership { "user-id": 123, 'membership-id' => 1001 }
+    }
+    $logger->info("Finished processing user.");
+    // => [2020-10-17 17:40:53] app.INFO: Finished processing user. { "user-id": 123 }
+}
+
+}
+```
+
+### Callable Context
+
+The other feature provided here is callable context. Any context elements that are `callable` will be invoked at 
+logging-time, and the result of the computation will be logged. Callables take a single array argument: 
+`function(array $context): mixed`
+
+```php 
+$startTime = microtime(true);
+$logger = (new MyLogger())->child([    
+    'elapsed_ms' => function(array $context){ return microtime(true) - $startTime);
+]);
+
+// Every record logged by $logger will include 
+```
 
 [similar functionality]: https://getpino.io/#/docs/child-loggers
 [pinojs]: https://github.com/pinojs/pino 
