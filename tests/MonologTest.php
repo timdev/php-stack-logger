@@ -48,4 +48,5 @@ class MonologTest extends BaseTest
         */         
         $this->assertTrue($newChannel->extraMethod());
     }
+
 }

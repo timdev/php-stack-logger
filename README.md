@@ -1,6 +1,6 @@
 # PHP Stack Logger
 
-A PSR-3 Logger that can track context.
+Extend your PSR-3 style logger with context accumulation and callable context elements.
 
 ## Inspiration
 
@@ -90,14 +90,21 @@ The other feature provided here is callable context. Any context elements that a
 logging-time, and the result of the computation will be logged. Callables take a single array argument: 
 `function(array $context): mixed`
 
-```php 
+```php
 $startTime = microtime(true);
 $logger = (new MyLogger())->child([    
-    'elapsed_ms' => function(array $context){ return microtime(true) - $startTime);
+    'elapsed_ms' => fn() => (microtime(true) - $startTime) * 1000000 * 1000,
+    'context_count' => fn($ctx) => count($ctx)
 ]);
 
-// Every record logged by $logger will include 
+// Each message will contain context like: ['elapsed_ms' => 1523, 'context_count' => 2]
 ```
+
+## To Do
+
+- [ ] Think of a better name than `StackLogger`
+- [ ] Maybe provide a Monolog-derived class that composes the trait for convenience
+- [ ] Add some tests using other logging implementations (Laminas-Log, Bref, Analog?). 
 
 [similar functionality]: https://getpino.io/#/docs/child-loggers
 [pinojs]: https://github.com/pinojs/pino 
