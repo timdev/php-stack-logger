@@ -16,7 +16,9 @@ use TimDev\StackLogger\Test\Support\TestLoggerInterface;
 class MonologTest extends BaseTest
 {
     /* PHP 7.4 doesn't support covariant typed properties 😢 */
-    /** @var ExtendedMonologLogger */
+    /** @var ExtendedMonologLogger
+     * @noinspection PhpDocFieldTypeMismatchInspection
+     */
     protected TestLoggerInterface $log;
 
     protected function makeTestSubject(): ExtendedMonologLogger
