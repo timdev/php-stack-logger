@@ -3,14 +3,23 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger;
 
-
 trait StackLoggerTrait
 {
     protected array $context = [];
 
     /**
+     * {@inheritDoc}
+     */
+    public function child(array $context = []): self
+    {
+        $child = clone $this;
+        $child->context = array_merge($this->context, $context);
+        return $child;
+    }
+
+    /**
      * Many (but crucially, not all, you need to check!) PSR3 loggers use `log()` as the fundamental method for logging
-     * messages. In those cases, we can
+     * messages. In those cases, we can simply intercept log() calls and do our magic.
      */
     public function log($level, $message, array $context = []): void
     {
@@ -20,16 +29,6 @@ trait StackLoggerTrait
 
         // actually log the message.
         parent::log($level, $message, $context);
-    }
-
-    /**
-     * Returns a child logger with additional tracked context.
-     */
-    public function child(array $context = []): self
-    {
-        $child = clone $this;
-        $child->context = array_merge($this->context, $context);
-        return $child;
     }
 
     /**

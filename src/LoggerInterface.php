@@ -5,7 +5,7 @@ namespace TimDev\StackLogger;
 interface LoggerInterface extends \Psr\Log\LoggerInterface
 {
     /**
-     * Returns a
+     * Returns a new instance that has $context merged on top of any existing context.
      */
     public function child(array $context = []): self;
 }

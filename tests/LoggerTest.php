@@ -3,7 +3,6 @@
 namespace TimDev\StackLogger\Test;
 
 use TimDev\StackLogger\Test\Support\ExtendedTestLogger;
-use TimDev\StackLogger\Test\BaseTest;
 
 /**
  * Test generic PSR-3 logger derived from use Psr\Log\Test\TestLogger

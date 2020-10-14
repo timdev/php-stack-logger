@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace TimDev\StackLogger;
 
 /**
- * If you're extending a Monolog\Logger, and your code calls Monolog\Logger::addRecord() directly,
- * you can use this trait instead of StackLoggerTrait.
+ * If you're extending a Monolog\Logger, and your code calls Monolog\Logger::addRecord() directly, you can use this
+ * trait instead of StackLoggerTrait.
  */
 trait MonologStackLoggerTrait 
 {

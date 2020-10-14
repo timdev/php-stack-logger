@@ -31,5 +31,4 @@ final class ExtendedTestLogger extends TestLogger implements TestLoggerInterface
         $this->records = new \ArrayObject();
         $this->recordsByLevel = new \ArrayObject();
     }
-
 }

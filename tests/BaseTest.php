@@ -30,7 +30,7 @@ abstract class BaseTest extends TestCase
         $this->log->info('Log me some message');
         $this->log->warning('Log me some warning.');
         $records = $this->log->getRecords();
-        
+
         $this->assertEquals('Log me some message', $records[0]['message']);
         $this->assertEquals('Log me some warning.', $records[1]['message']);
     }
@@ -106,15 +106,13 @@ abstract class BaseTest extends TestCase
             $this->log->contextCountAt(1),          // === 3  
             $this->log->contextAt(1)['counter']
         );
-        
+
         $start = microtime(true);
-        $child2 = $logger->child([
-            'elapsed_micros' => fn() => 1000000 * (microtime(true) - $start)
-        ]);
+        $child2 = $logger->child(['elapsed_micros' => fn() => 1000000 * (microtime(true) - $start)]);
         usleep(1000);
         $child2->info('At least 1000 μ-sec have passed.');
-        
+
         $this->assertGreaterThan(1000, $child2->contextAt(2)['elapsed_micros']);
-            
+
     }
 }
