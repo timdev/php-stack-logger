@@ -1,7 +1,6 @@
 {
   "name": "timdev/php-stack-logger",
   "description": "A PSR-3 Logger that can track context.",
-  "version": "0.1",
   "type": "library",
   "require": {
     "php": ">=7.4",
