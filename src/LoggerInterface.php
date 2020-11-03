@@ -6,6 +6,8 @@ interface LoggerInterface extends \Psr\Log\LoggerInterface
 {
     /**
      * Returns a new instance that has $context merged on top of any existing context.
+     * 
+     * @return static
      */
-    public function child(array $context = []): self;
+    public function child(array $context = []);
 }

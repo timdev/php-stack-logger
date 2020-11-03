@@ -15,11 +15,6 @@ use TimDev\StackLogger\Test\Support\TestLoggerInterface;
  */
 class MonologTest extends BaseTest
 {
-    /* PHP 7.4 doesn't support covariant typed properties 😢 */
-    /** @var ExtendedMonologLogger
-     * @noinspection PhpDocFieldTypeMismatchInspection
-     */
-    protected TestLoggerInterface $log;
 
     protected function makeTestSubject(): ExtendedMonologLogger
     {
@@ -29,14 +24,14 @@ class MonologTest extends BaseTest
     public function test_withName_cloning()
     {
         // push some context. 
-        $log = $this->log->child(['basic' => 'context']);
+        $log = $this->makeTestSubject()->child(['basic' => 'context']);
 
         // get a clone with a new monolog channel-name, and log to it.
         $newChannel = $log->withName('other');
         $newChannel->info('A message');
 
         // ensure the handler has accumulated records with context attached.
-        $rec = $this->log->recordAt(0);
+        $rec = $log->recordAt(0);
 
         $this->assertEquals('other', $rec['channel']);
         $this->assertCount(1, $rec['context']);

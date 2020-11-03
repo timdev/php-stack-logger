@@ -9,7 +9,7 @@ use Laminas\Log\Writer\Mock;
 use TimDev\StackLogger\StackLoggerTrait;
 
 /**
- * An extension of the PsrLoggerAdapter from Laminas-Log.
+ * An extension of the PsrLoggerAdapter from laminas-Log.
  */
 class ExtendedLaminasLogger extends PsrLoggerAdapter implements TestLoggerInterface
 {
@@ -29,9 +29,10 @@ class ExtendedLaminasLogger extends PsrLoggerAdapter implements TestLoggerInterf
     public function getRecords(): array 
     {
         /* 
-        Laminas Log has a different internal record structure, but that's okay. We just transform them into something
-        that resembles PSR/Monolog style records here. 
-        */
+         * Laminas Log has a different internal record structure, but that's
+         * okay. We just transform them into something that resembles
+         * PSR/Monolog style records here.
+         */
         return array_map(function($record){
             return [
                 'level' => $record['priorityName'],

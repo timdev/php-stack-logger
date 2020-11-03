@@ -16,7 +16,11 @@ use TimDev\StackLogger\Test\Support\TestLoggerInterface;
  */
 abstract class BaseTest extends TestCase
 {
-    protected TestLoggerInterface $log;
+    /**
+     * This is private because property types are invariant (since they're r/w). Concrete subclasses can rely on
+     * makeTextSubject() directly in each test, or define their own typed private $log.
+     */
+    private TestLoggerInterface $log;
 
     abstract protected function makeTestSubject(): TestLoggerInterface;
 
