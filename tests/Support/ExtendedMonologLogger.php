@@ -8,7 +8,8 @@ use Monolog\Logger;
 use TimDev\StackLogger\MonologStackLoggerTrait;
 
 /**
- * Here we extend Monolog\Logger by applying the StackMonologLoggerTrait trait, and add an extra method just for laughs. 
+ * Here we extend Monolog\Logger by applying the StackMonologLoggerTrait trait,
+ * and add an extra method just for laughs.
  */
 class ExtendedMonologLogger extends Logger implements TestLoggerInterface
 {
@@ -21,7 +22,8 @@ class ExtendedMonologLogger extends Logger implements TestLoggerInterface
     }
 
     /**
-     * Used in a test to demonstrate static analysis understands phpDoc directives in the trait.
+     * Used in a test to demonstrate static analysis understands phpDoc
+     * directives in the trait.
      */
     public function extraMethod(): bool
     {

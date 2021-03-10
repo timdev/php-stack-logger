@@ -11,14 +11,16 @@ use TimDev\StackLogger\Test\Support\TestLoggerInterface;
 /**
  * Base class for testing against various loggers.
  *
- * We want to run these tests against extensions of various logger implementations. Actual test classes extend this
- * and implement makeTestSubject().
+ * We want to run these tests against extensions of various logger
+ * implementations. Actual test classes extend this and implement
+ * makeTestSubject().
  */
 abstract class BaseTest extends TestCase
 {
     /**
-     * This is private because property types are invariant (since they're r/w). Concrete subclasses can rely on
-     * makeTextSubject() directly in each test, or define their own typed private $log.
+     * This is private because property types are invariant (since they're r/w).
+     * Concrete subclasses can rely on makeTextSubject() directly in each test,
+     * or define their own typed private $log.
      */
     private TestLoggerInterface $log;
 
@@ -39,17 +41,36 @@ abstract class BaseTest extends TestCase
         $this->assertEquals('Log me some warning.', $records[1]['message']);
     }
 
+    public function testAddsContext()
+    {
+        $this->log->addContext(['some' => 'context']);
+        $this->log->info('An info.');
+        $this->assertEquals(['some'], $this->log->contextKeysAt(0));
+
+        $this->log->addContext(['more' => 'context']);
+        $this->log->info('I should have two bits of context.');
+        $this->assertEquals(2, $this->log->contextCountAt(1));
+        $this->assertEquals(['some', 'more'], $this->log->contextKeysAt(1));
+
+        $this->log->addContext(['even more' => 'context']);
+        $this->log->warning('This message should get four context elements.', ['foo' => 'bar']);
+        $this->assertEquals(4, $this->log->contextCountAt(2));
+
+        $this->log->debug('Back to three!');
+        $this->assertEquals(['some', 'more', 'even more'], $this->log->contextKeysAt(3));
+    }
+
     public function testCreateChildWithContext()
     {
-        $log = $this->log->child(['initial' => 'context']);
+        $log = $this->log->withContext(['initial' => 'context']);
         $log->debug('I should have some context from my constructor arg');
         $this->assertEquals('context', $this->log->recordAt(0)['context']['initial']);
     }
 
     public function testAccumulatesContext()
     {
-        $log = $this->log->child(['initial' => 'context']);
-        $child = $log->child(['more' => 'context']);
+        $log = $this->log->withContext(['initial' => 'context']);
+        $child = $log->withContext(['more' => 'context']);
 
         // $child should have two context items.
         $child->warning('I should have three context items', ['final' => 'context']);
@@ -70,11 +91,11 @@ abstract class BaseTest extends TestCase
 
     public function textMergesContext()
     {
-        $log = $this->log->child(['a' => 'Alice']);
+        $log = $this->log->withContext(['a' => 'Alice']);
 
         // Alice should be overwritten with Allison in child.
         $log
-            ->child(['a' => 'Allison', 'b' => 'Bob'])
+            ->withContext(['a' => 'Allison', 'b' => 'Bob'])
             ->info('Allison and Bruno', ['b' => 'Bruno']);
         $this->assertEquals(
             ['Allison', 'Bruno'],
@@ -92,7 +113,7 @@ abstract class BaseTest extends TestCase
     public function testInvokesCallables()
     {
         $logger = $this->log;
-        $child = $logger->child(
+        $child = $logger->withContext(
             [
                 // A callable context element that returns the number of
                 // elements in the record's context.
@@ -104,15 +125,15 @@ abstract class BaseTest extends TestCase
         $child->notice('Only one context element, the result of the callable.');
         $this->assertEquals(1, $this->log->contextAt(0)['counter']);
 
-        $child = $child->child(['Second' => 'Context Item']);
+        $child = $child->withContext(['Second' => 'Context Item']);
         $child->warning('A log with three context items.', ['Third' => 'Context Item']);
         $this->assertEquals(
-            $this->log->contextCountAt(1),          // === 3  
+            $this->log->contextCountAt(1),          // === 3
             $this->log->contextAt(1)['counter']
         );
 
         $start = microtime(true);
-        $child2 = $logger->child(['elapsed_micros' => fn() => 1000000 * (microtime(true) - $start)]);
+        $child2 = $logger->withContext(['elapsed_micros' => fn() => 1000000 * (microtime(true) - $start)]);
         usleep(1000);
         $child2->info('At least 1000 μ-sec have passed.');
 

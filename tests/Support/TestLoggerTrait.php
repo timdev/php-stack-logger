@@ -5,8 +5,8 @@ namespace TimDev\StackLogger\Test\Support;
 /**
  * A trait that implements TestLoggerInterface.
  *
- * If your logger implementation has some way of buffering records as an array, you can probably leverage this,
- * overriding getRecords() as necessary.
+ * If your logger implementation has some way of buffering records as an array,
+ * you can probably leverage this, overriding getRecords() as necessary.
  */
 trait TestLoggerTrait
 {

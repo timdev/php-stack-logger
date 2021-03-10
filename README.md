@@ -26,6 +26,7 @@ processors or handlers added, without adding those to the parent.
 ## Usage
 
 ### Child Loggers
+
 ```php
 use TimDev\StackLogger\StackLoggerTrait;
 
@@ -44,7 +45,7 @@ $mainLogger->info("Have some Context", ['my' => 'context']);
 // => [2020-10-17 17:40:53] app.INFO: Have some Context {"my": "context"}
 
 // but you might want to accumulate some context
-$child1 = $mainLogger->child(['child' => 'context']);
+$child1 = $mainLogger->withContext(['child' => 'context']);
 $child1->info('From a child.', ['call-time' => 'context']);
 // => [2020-10-17 17:40:53] app.INFO: From a child. {"child":"context","call-time":"context"}
 

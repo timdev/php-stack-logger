@@ -6,12 +6,12 @@ declare(strict_types=1);
 namespace TimDev\StackLogger\Test;
 
 use TimDev\StackLogger\Test\Support\ExtendedMonologLogger;
-use TimDev\StackLogger\Test\Support\TestLoggerInterface;
 
 /**
  * Test against monolog.
  *
- * Uses ExtendedMonologLogger as a subject, with additional test method(s) for monolog-specific stuff.
+ * Uses ExtendedMonologLogger as a subject, with additional test method(s) for
+ * monolog-specific stuff.
  */
 class MonologTest extends BaseTest
 {
@@ -23,8 +23,8 @@ class MonologTest extends BaseTest
 
     public function test_withName_cloning()
     {
-        // push some context. 
-        $log = $this->makeTestSubject()->child(['basic' => 'context']);
+        // push some context.
+        $log = $this->makeTestSubject()->withContext(['basic' => 'context']);
 
         // get a clone with a new monolog channel-name, and log to it.
         $newChannel = $log->withName('other');
@@ -37,9 +37,9 @@ class MonologTest extends BaseTest
         $this->assertCount(1, $rec['context']);
         $this->assertEquals('context', $rec['context']['basic']);
 
-        /* 
-        This is mostly to prove that static analysis knows $newChannel is an ExtendedMonologLogger, even though 
-        `StackMonologLoggerTrait::withName(): \Monolog\Logger` tells us it isn't.          
+        /*
+        This is mostly to prove that static analysis knows $newChannel is an ExtendedMonologLogger, even though
+        `StackMonologLoggerTrait::withName(): \Monolog\Logger` tells us it isn't.
         */
         $this->assertTrue($newChannel->extraMethod());
     }

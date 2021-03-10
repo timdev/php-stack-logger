@@ -10,16 +10,26 @@ trait StackLoggerTrait
     /**
      * {@inheritDoc}
      */
-    public function child(array $context = []): self
+    public function withContext(array $context = []): self
     {
         $child = clone $this;
-        $child->context = array_merge($this->context, $context);
+        $child->addContext($context);
         return $child;
     }
 
     /**
-     * Many (but crucially, not all, you need to check!) PSR3 loggers use `log()` as the fundamental method for logging
-     * messages. In those cases, we can simply intercept log() calls and do our magic.
+     * {@inheritDoc}
+     */
+    public function addContext(array $context): self
+    {
+        $this->context = array_merge($this->context, $context);
+        return $this;
+    }
+
+    /**
+     * Many (but crucially, not all, you need to check!) PSR3 loggers use
+     * `log()` as the fundamental method for logging messages. In those cases,
+     * we can simply intercept log() calls and do our magic.
      */
     public function log($level, $message, array $context = []): void
     {
@@ -32,8 +42,9 @@ trait StackLoggerTrait
     }
 
     /**
-     * Merges $context on top of the instances accumulated context, and processes any callable elements in the final
-     * context. Factored out from log() above, since it's occasionally usefule elsewhere (like in
+     * Merges $context on top of the instances accumulated context, and
+     * processes any callable elements in the final context. Factored out from
+     * log() above, since it's occasionally usefule elsewhere (like in
      * `MonologStackLoggerTrait::addRecord()`.
      */
     protected function processContext(array $context): array
