@@ -9,6 +9,8 @@ use Psr\Log\Test\TestLogger;
 use TimDev\StackLogger\StackLoggerTrait;
 
 /**
+ * Extends the PSR-3 TestLogger with StackLogger.
+ *
  * Demonstrates extending any old PSR-3 logger with the StackLogger trait.
  */
 final class ExtendedTestLogger extends TestLogger implements TestLoggerInterface

@@ -2,6 +2,8 @@
 
 namespace TimDev\StackLogger\Test\Support;
 
+use TimDev\StackLogger\LoggerInterface;
+
 /**
  * A trait that implements TestLoggerInterface.
  *
@@ -10,9 +12,12 @@ namespace TimDev\StackLogger\Test\Support;
  */
 trait TestLoggerTrait
 {
+
+    /* Methods for inspecting accumulated records */
+
     public function getRecords(): array
     {
-        return (array)$this->records;
+                return (array)$this->records;
     }
 
     public function recordAt($index): ?array
@@ -42,4 +47,17 @@ trait TestLoggerTrait
         $ctx = $this->contextAt($recordIndex);
         return $ctx ? count($ctx) : null;
     }
+
+    /* Methods for inspecting the context tracked by the instance */
+
+    public function getContext(): array
+    {
+        return $this->mergedContext();
+    }
+
+    public function countContext(): int
+    {
+        return count($this->mergedContext());
+    }
+
 }

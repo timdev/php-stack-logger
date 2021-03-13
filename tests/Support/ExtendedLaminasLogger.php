@@ -15,20 +15,20 @@ class ExtendedLaminasLogger extends PsrLoggerAdapter implements TestLoggerInterf
 {
     use StackLoggerTrait;
     use TestLoggerTrait;
-    
+
     private Mock $writer;
 
     public function __construct() {
-        
+
         $this->writer = new Mock();
         $logger = new Logger();
         $logger->addWriter($this->writer);
-        parent::__construct($logger); 
-    }    
-    
-    public function getRecords(): array 
+        parent::__construct($logger);
+    }
+
+    public function getRecords(): array
     {
-        /* 
+        /*
          * Laminas Log has a different internal record structure, but that's
          * okay. We just transform them into something that resembles
          * PSR/Monolog style records here.
