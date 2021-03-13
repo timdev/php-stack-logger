@@ -42,7 +42,7 @@ class MonologTest extends BaseTest
         $this->assertCount(0, $log->getChannelRecords());
         // and one was written to the new channel
         $this->assertCount(1, $newChannel->getChannelRecords());
-        
+
         /*
         This is mostly to prove that static analysis knows $newChannel is an ExtendedMonologLogger, even though
         `StackMonologLoggerTrait::withName(): \Monolog\Logger` tells us it isn't.
