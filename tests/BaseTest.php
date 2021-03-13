@@ -31,7 +31,7 @@ abstract class BaseTest extends TestCase
         $this->log = $this->makeTestSubject();
     }
 
-    public function testLogsMessages()
+    public function testLogsMessages(): void
     {
         $this->log->info('Log me some message');
         $this->log->warning('Log me some warning.');
@@ -41,7 +41,7 @@ abstract class BaseTest extends TestCase
         $this->assertEquals('Log me some warning.', $records[1]['message']);
     }
 
-    public function testAddsContext()
+    public function testAddsContext(): void
     {
         $this->log->addContext(['some' => 'context']);
         $this->log->info('An info.');
@@ -60,14 +60,14 @@ abstract class BaseTest extends TestCase
         $this->assertEquals(['some', 'more', 'even more'], $this->log->contextKeysAt(3));
     }
 
-    public function testCreateChildWithContext()
+    public function testCreateChildWithContext(): void
     {
         $log = $this->log->withContext(['initial' => 'context']);
         $log->debug('I should have some context from my constructor arg');
         $this->assertEquals('context', $this->log->recordAt(0)['context']['initial']);
     }
 
-    public function testAccumulatesContext()
+    public function testAccumulatesContext(): void
     {
         $log = $this->log->withContext(['initial' => 'context']);
         $child = $log->withContext(['more' => 'context']);
@@ -89,7 +89,7 @@ abstract class BaseTest extends TestCase
         );
     }
 
-    public function textMergesContext()
+    public function textMergesContext(): void
     {
         $log = $this->log->withContext(['a' => 'Alice']);
 
@@ -110,7 +110,7 @@ abstract class BaseTest extends TestCase
         );
     }
 
-    public function testInvokesCallables()
+    public function testInvokesCallables(): void
     {
         $logger = $this->log;
         $child = $logger->withContext(
@@ -144,7 +144,7 @@ abstract class BaseTest extends TestCase
      * None of the other tests go beyond approximately 3 loggers in a chain. This test
      * is a sanity check for all the core features with a long chain of loggers.
      */
-    public function testLongChain()
+    public function testLongChain(): void
     {
         $logger = $this->log;
         $numLoggers = 20;

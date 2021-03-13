@@ -23,7 +23,7 @@ class MonologTest extends BaseTest
         return $this->log = new ExtendedMonologLogger();
     }
 
-    public function test_withName_cloning()
+    public function test_withName_cloning(): void
     {
         // push some context.
         $log = $this->makeTestSubject()->withContext(['basic' => 'context']);
@@ -50,7 +50,7 @@ class MonologTest extends BaseTest
         $this->assertTrue($newChannel->extraMethod());
     }
 
-    public function test_withName_clones_track_parent_context()
+    public function test_withName_clones_track_parent_context(): void
     {
 
         $original = $this->log->withContext(['original' => 'context']);
@@ -69,7 +69,7 @@ class MonologTest extends BaseTest
         $this->assertEquals(2, $renamed->contextCountAt(0));
     }
 
-    public function test_withName_convoluted()
+    public function test_withName_convoluted(): void
     {
 
         /*
