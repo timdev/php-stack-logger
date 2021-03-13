@@ -25,24 +25,24 @@ trait TestLoggerTrait
         return $this->getRecords()[$index] ?? null;
     }
 
-    public function contextAt($recordIndex)
+    public function contextAt($recordIndex): ?array
     {
         return $this->recordAt($recordIndex)['context'] ?? null;
     }
 
-    public function contextKeysAt($recordIndex)
+    public function contextKeysAt($recordIndex): ?array
     {
         $ctx = $this->contextAt($recordIndex);
         return $ctx ? array_keys($ctx) : null;
     }
 
-    public function contextValuesAt($recordIndex)
+    public function contextValuesAt($recordIndex): ?array
     {
         $ctx = $this->contextAt($recordIndex);
         return $ctx ? array_values($ctx) : null;
     }
 
-    public function contextCountAt($recordIndex)
+    public function contextCountAt($recordIndex): ?array
     {
         $ctx = $this->contextAt($recordIndex);
         return $ctx ? count($ctx) : null;
