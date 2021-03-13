@@ -26,5 +26,4 @@ interface LoggerInterface extends \Psr\Log\LoggerInterface
      * @return static
      */
     public function addContext(array $context);
-
 }

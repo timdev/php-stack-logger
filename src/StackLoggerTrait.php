@@ -5,15 +5,20 @@ namespace TimDev\StackLogger;
 
 trait StackLoggerTrait
 {
+    protected ?LoggerInterface $parent = null;
+
     protected array $context = [];
 
     /**
      * {@inheritDoc}
+     *
+     * @return static
      */
     public function withContext(array $context = []): self
     {
         $child = clone $this;
-        $child->addContext($context);
+        $child->parent = $this;
+        $child->context = $context;
         return $child;
     }
 
@@ -47,17 +52,23 @@ trait StackLoggerTrait
      * log() above, since it's occasionally usefule elsewhere (like in
      * `MonologStackLoggerTrait::addRecord()`.
      */
-    protected function processContext(array $context): array
+    protected function processContext(array $context = []): array
     {
-        // get final context
-        $context = array_merge($this->context, $context);
+        $context = array_merge($this->mergedContext(), $context);
 
         // handle any callables in final context.
         $context = array_map(
             static fn($c) => is_callable($c) ? $c($context) : $c,
             $context
         );
-
         return $context;
+    }
+
+    protected function mergedContext(): array
+    {
+        $pc = $this->parent
+            ? $this->parent->mergedContext()
+            : [];
+        return array_merge($pc, $this->context);
     }
 }

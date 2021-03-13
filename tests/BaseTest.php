@@ -138,6 +138,21 @@ abstract class BaseTest extends TestCase
         $child2->info('At least 1000 μ-sec have passed.');
 
         $this->assertGreaterThan(1000, $child2->contextAt(2)['elapsed_micros']);
+    }
 
+    /*
+     * None of the other tests go beyond approximately 3 loggers in a chain. This test
+     * is a sanity check for all the core features with a long chain of loggers.
+     */
+    public function testLongChain()
+    {
+        $logger = $this->log;
+        $numLoggers = 20;
+        foreach(range(1, $numLoggers) as $i) {
+            $logger = $logger->withContext(["gen{$i}" => $i]);
+        }
+        $logger->withContext(["count" => fn($ctx) => count($ctx)]);
+        $logger->info("I come from a long lineage", ['final' => 'I should be the 21st context element']);
+        $this->assertCount($numLoggers + 1, $logger->recordAt(0)['context']);
     }
 }

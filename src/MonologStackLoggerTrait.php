@@ -46,8 +46,11 @@ trait MonologStackLoggerTrait
      */
     public function withName(string $name): \Monolog\Logger
     {
+        /** @var LoggerInterface $this */
+        /** @var static $new */
         $new = parent::withName($name);
-        $new->context = $this->context;
+        $new->context = [];
+        $new->parent = $this;
         return $new;
     }
 }
