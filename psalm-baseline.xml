@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.6.2@bca09d74adc704c4eaee36a3c3e9d379e290fc3b">
+  <file src="src/StackLoggerTrait.php">
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>self</code>
+    </LessSpecificImplementedReturnType>
+    <MissingClosureReturnType occurrences="1">
+      <code>static fn($c) =&gt; is_callable($c) ? $c($context) : $c</code>
+    </MissingClosureReturnType>
+    <MissingParamType occurrences="2">
+      <code>$level</code>
+      <code>$message</code>
+    </MissingParamType>
+    <MixedArgument occurrences="2">
+      <code>$message</code>
+      <code>$pc</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$pc</code>
+    </MixedAssignment>
+    <MoreSpecificReturnType occurrences="1">
+      <code>static</code>
+    </MoreSpecificReturnType>
+    <NoInterfaceProperties occurrences="2">
+      <code>$child-&gt;context</code>
+      <code>$child-&gt;parent</code>
+    </NoInterfaceProperties>
+    <UndefinedDocblockClass occurrences="1">
+      <code>$child</code>
+    </UndefinedDocblockClass>
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>mergedContext</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="tests/BaseTest.php">
+    <MissingClosureParamType occurrences="1">
+      <code>$ctx</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="2">
+      <code>$ctx</code>
+      <code>$logger-&gt;recordAt(0)['context']</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="1">
+      <code>$log-&gt;recordAt(0)['context']['initial']</code>
+    </MixedArrayAccess>
+  </file>
+  <file src="tests/LaminasTest.php">
+    <PropertyNotSetInConstructor occurrences="3">
+      <code>$log</code>
+      <code>LaminasTest</code>
+      <code>LaminasTest</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="tests/LoggerTest.php">
+    <PropertyNotSetInConstructor occurrences="2">
+      <code>LoggerTest</code>
+      <code>LoggerTest</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="tests/MonologTest.php">
+    <MixedArgument occurrences="2">
+      <code>$first-&gt;getChannelRecords()[0]['context']</code>
+      <code>$rec['context']</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="2">
+      <code>$first-&gt;getChannelRecords()[0]['context']</code>
+      <code>$rec['context']['basic']</code>
+    </MixedArrayAccess>
+    <PropertyNotSetInConstructor occurrences="3">
+      <code>$log</code>
+      <code>MonologTest</code>
+      <code>MonologTest</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="tests/Support/ExtendedLaminasLogger.php">
+    <MixedArrayAccess occurrences="3">
+      <code>$record['extra']</code>
+      <code>$record['message']</code>
+      <code>$record['priorityName']</code>
+    </MixedArrayAccess>
+  </file>
+  <file src="tests/Support/ExtendedMonologLogger.php">
+    <MixedInferredReturnType occurrences="2">
+      <code>?array</code>
+      <code>array</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="2">
+      <code>$this-&gt;getChannelRecords()[$index] ?? null</code>
+      <code>$this-&gt;handlers[0]-&gt;getRecords()</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="tests/Support/TestLoggerTrait.php">
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>array</code>
+    </LessSpecificImplementedReturnType>
+    <MissingPropertyType occurrences="2">
+      <code>$records</code>
+      <code>$recordsByLevel</code>
+    </MissingPropertyType>
+    <MixedInferredReturnType occurrences="3">
+      <code>array</code>
+      <code>array</code>
+      <code>array</code>
+    </MixedInferredReturnType>
+  </file>
+</files>
