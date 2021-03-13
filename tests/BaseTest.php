@@ -64,7 +64,7 @@ abstract class BaseTest extends TestCase
     {
         $log = $this->log->withContext(['initial' => 'context']);
         $log->debug('I should have some context from my constructor arg');
-        $this->assertEquals('context', $this->log->recordAt(0)['context']['initial']);
+        $this->assertEquals('context', $log->recordAt(0)['context']['initial']);
     }
 
     public function testAccumulatesContext(): void
@@ -74,18 +74,19 @@ abstract class BaseTest extends TestCase
 
         // $child should have two context items.
         $child->warning('I should have three context items', ['final' => 'context']);
-        $this->assertCount(3, $this->log->contextAt(0));
+        $this->assertCount(3, $child->contextAt(0));
         $this->assertEquals(
             ['initial', 'more', 'final'],
-            $this->log->contextKeysAt(0)
+            $child->contextKeysAt(0)
         );
 
         // Messages logged by $log should not anything beyond the 'initial' context item.
-        $log->notice('I should have one context item');
+        $log->info('I should have one context item (on my second record)');
+
         $this->assertCount(1, $log->contextAt(1));
         $this->assertEquals(
             ['initial'],
-            $this->log->contextKeysAt(1)
+            $log->contextKeysAt(1)
         );
     }
 
@@ -123,20 +124,19 @@ abstract class BaseTest extends TestCase
             ]
         );
         $child->notice('Only one context element, the result of the callable.');
-        $this->assertEquals(1, $this->log->contextAt(0)['counter']);
+        $this->assertEquals(1, $child->contextAt(0)['counter']);
 
         $child = $child->withContext(['Second' => 'Context Item']);
         $child->warning('A log with three context items.', ['Third' => 'Context Item']);
         $this->assertEquals(
-            $this->log->contextCountAt(1),          // === 3
-            $this->log->contextAt(1)['counter']
+            $child->contextCountAt(1),          // === 3
+            $child->contextAt(1)['counter']
         );
 
         $start = microtime(true);
         $child2 = $logger->withContext(['elapsed_micros' => fn() => 1000000 * (microtime(true) - $start)]);
         usleep(1000);
         $child2->info('At least 1000 μ-sec have passed.');
-
         $this->assertGreaterThan(1000, $child2->contextAt(2)['elapsed_micros']);
     }
 

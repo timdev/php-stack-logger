@@ -11,6 +11,7 @@ class LoggerTest extends BaseTest
 {
     protected function makeTestSubject(): ExtendedTestLogger
     {
+        ExtendedTestLogger::resetRecords();;
         return new ExtendedTestLogger();
     }
 }

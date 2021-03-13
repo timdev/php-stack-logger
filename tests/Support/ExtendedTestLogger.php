@@ -21,16 +21,37 @@ final class ExtendedTestLogger extends TestLogger implements TestLoggerInterface
     // Test-Helpers
     use TestLoggerTrait;
 
-    public $records;
-    public $recordsByLevel;
+    /*
+     \Psr\Log\Test\TestLogger uses arrays internally, which is kind of a pain,
+     since our other test loggers use some kind of object. Since arrays are
+     copy-by-value, this causes various recordAt() calls in BaseTest to
+     conflict. So we abuse static here to ensure that *within a single test
+     method*, all loggers write messages to the same array. Note that
+     ExtendedTestLogger::resetRecords() in LoggerTest::makeTestSubject(),
+     which is how get isolation within test methods.
+    */
+    private static array $_records = [];
+    private static array $_recordsByLevel = [];
+    public static function resetRecords(): void
+    {
+        self::$_records = [];
+        self::$_recordsByLevel = [];
+    }
 
-    /**
-     * Replace TestLogger's $records arrays with an ArrayObject, which be copied
-     * by reference during a clone, in the same way as in the real world, where
-     * clones get references to the original handlers/resources/etc.
-     */
-    public function __construct() {
-        $this->records = new \ArrayObject();
-        $this->recordsByLevel = new \ArrayObject();
+
+    public function __construct()
+    {
+        $this->linkRecordStorage();
+    }
+
+    public function __clone()
+    {
+        $this->linkRecordStorage();
+    }
+
+    private function linkRecordStorage(): void
+    {
+        $this->records = &self::$_records;
+        $this->recordsByLevel = &self::$_recordsByLevel;
     }
 }

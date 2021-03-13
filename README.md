@@ -1,6 +1,6 @@
 # PHP Stack Logger
 
-Extend your PSR-3 style logger with context accumulation and callable context elements.
+Extend your PSR-3 logger with context accumulation and callable context elements.
 
 ## Inspiration
 

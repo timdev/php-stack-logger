@@ -16,6 +16,7 @@ trait StackLoggerTrait
      */
     public function withContext(array $context = []): self
     {
+        /** @var LoggerInterface&StackLoggerTrait $this */
         $child = clone $this;
         $child->parent = $this;
         $child->context = $context;
@@ -32,9 +33,11 @@ trait StackLoggerTrait
     }
 
     /**
-     * Many (but crucially, not all, you need to check!) PSR3 loggers use
+     * Many (but crucially, not all, you need to check!) PSR-3 loggers use
      * `log()` as the fundamental method for logging messages. In those cases,
      * we can simply intercept log() calls and do our magic.
+     *
+     * {@inheritDoc}
      */
     public function log($level, $message, array $context = []): void
     {

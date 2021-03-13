@@ -2,8 +2,6 @@
 
 namespace TimDev\StackLogger\Test\Support;
 
-use TimDev\StackLogger\LoggerInterface;
-
 /**
  * A trait that implements TestLoggerInterface.
  *
@@ -12,40 +10,49 @@ use TimDev\StackLogger\LoggerInterface;
  */
 trait TestLoggerTrait
 {
+    public $records = [];
+
+    public $recordsByLevel = [];
 
     /* Methods for inspecting accumulated records */
 
     public function getRecords(): array
     {
-                return (array)$this->records;
+        return $this->records;
     }
 
-    public function recordAt($index): ?array
+    public function recordAt(int $index): array
     {
-        return $this->getRecords()[$index] ?? null;
+        $records = $this->getRecords();
+        if(!array_key_exists($index, $records)){
+            throw new \OutOfBoundsException("No record at index {$index}");
+        }
+        return $records[$index];
+
     }
 
-    public function contextAt($recordIndex): ?array
+    public function contextAt(int $recordIndex): array
     {
-        return $this->recordAt($recordIndex)['context'] ?? null;
+        $record = $this->recordAt($recordIndex);
+        if (!is_array($record['context'] ?? null)){
+            throw new \UnexpectedValueException("Missing/invalid context at record index: {$recordIndex}");
+        }
+        return $record['context'];
     }
 
-    public function contextKeysAt($recordIndex): ?array
+    public function contextKeysAt(int $recordIndex): array
     {
-        $ctx = $this->contextAt($recordIndex);
-        return $ctx ? array_keys($ctx) : null;
+        return array_keys($this->contextAt($recordIndex));
     }
 
-    public function contextValuesAt($recordIndex): ?array
+    public function contextValuesAt(int $recordIndex): array
     {
-        $ctx = $this->contextAt($recordIndex);
-        return $ctx ? array_values($ctx) : null;
+        return array_values($this->contextAt($recordIndex));
     }
 
-    public function contextCountAt($recordIndex): ?int
+    public function contextCountAt(int $recordIndex): int
     {
-        $ctx = $this->contextAt($recordIndex);
-        return $ctx ? count($ctx) : null;
+        return count($this->contextAt($recordIndex));
     }
 
     /* Methods for inspecting the context tracked by the instance */
@@ -59,5 +66,4 @@ trait TestLoggerTrait
     {
         return count($this->mergedContext());
     }
-
 }

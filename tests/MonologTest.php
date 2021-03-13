@@ -15,7 +15,6 @@ use TimDev\StackLogger\Test\Support\ExtendedMonologLogger;
  */
 class MonologTest extends BaseTest
 {
-
     private ExtendedMonologLogger $log;
 
     protected function makeTestSubject(): ExtendedMonologLogger
@@ -71,7 +70,6 @@ class MonologTest extends BaseTest
 
     public function test_withName_convoluted(): void
     {
-
         /*
          This test is about doing a complex set of withName/withContext/addContext
          in non-naive order. It's not based on any observed use-case, but is more
@@ -102,9 +100,5 @@ class MonologTest extends BaseTest
 
         $this->assertEquals(2, $first->contextCountAt(0));
 
-        //
-
-
     }
-
 }

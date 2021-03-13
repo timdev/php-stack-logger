@@ -12,15 +12,27 @@ use TimDev\StackLogger\LoggerInterface;
  */
 interface TestLoggerInterface extends LoggerInterface
 {
-    public function contextAt($recordIndex);
+    /* Methods for inspecting accumulated records */
 
-    public function contextKeysAt($recordIndex);
+    public function contextAt(int $recordIndex): array;
 
-    public function contextValuesAt($recordIndex);
+    public function contextKeysAt(int $recordIndex): array;
 
-    public function contextCountAt($recordIndex);
+    public function contextValuesAt(int $recordIndex): array;
 
+    public function contextCountAt(int $recordIndex): int;
+
+    /**
+     * @return array[]
+     */
     public function getRecords(): array;
 
-    public function recordAt(int $index): ?array;
+    public function recordAt(int $index): array;
+
+    /* Methods for inspecting the context tracked by the instance */
+
+    public function getContext(): array;
+
+    public function countContext(): int;
+
 }
