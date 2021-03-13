@@ -42,7 +42,7 @@ trait TestLoggerTrait
         return $ctx ? array_values($ctx) : null;
     }
 
-    public function contextCountAt($recordIndex): ?array
+    public function contextCountAt($recordIndex): ?int
     {
         $ctx = $this->contextAt($recordIndex);
         return $ctx ? count($ctx) : null;
