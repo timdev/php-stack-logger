@@ -1,0 +1,33 @@
+# Select image from https://hub.docker.com/_/php/
+image: php:7.4-cli
+
+# Select what we should cache
+cache:
+  paths:
+  - vendor/
+
+before_script:
+# Install git, the php image doesn't have installed
+- apt-get update -yqq
+- apt-get install git libzip-dev -yqq
+
+# Install any regular extensions
+- docker-php-ext-install zip
+
+# Install and configure xdebug for code-coverage duty
+- pecl install xdebug
+- docker-php-ext-enable xdebug
+- echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
+
+# Install composer
+- curl -sS https://getcomposer.org/installer | php
+
+# Install all project dependencies
+- php composer.phar install
+
+# To start, we're just testing against 7.4
+# @todo Figure out how to test across a range of versions.
+test:php7.4:
+  script:
+  - vendor/bin/phpunit --coverage-text
+
