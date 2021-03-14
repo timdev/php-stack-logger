@@ -1,5 +1,7 @@
 <?php
+
 /** @noinspection ReturnTypeCanBeDeclaredInspection */
+
 /** @noinspection StaticInvocationViaThisInspection */
 declare(strict_types=1);
 
@@ -30,12 +32,12 @@ final class ExtendedTestLogger extends TestLogger implements TestLoggerInterface
      ExtendedTestLogger::resetRecords() in LoggerTest::makeTestSubject(),
      which is how get isolation within test methods.
     */
-    private static array $_records = [];
-    private static array $_recordsByLevel = [];
+    private static array $sharedRecords = [];
+    private static array $sharedRecordsByLevel = [];
     public static function resetRecords(): void
     {
-        self::$_records = [];
-        self::$_recordsByLevel = [];
+        self::$sharedRecords = [];
+        self::$sharedRecordsByLevel = [];
     }
 
 
@@ -51,7 +53,7 @@ final class ExtendedTestLogger extends TestLogger implements TestLoggerInterface
 
     private function linkRecordStorage(): void
     {
-        $this->records = &self::$_records;
-        $this->recordsByLevel = &self::$_recordsByLevel;
+        $this->records = &self::$sharedRecords;
+        $this->recordsByLevel = &self::$sharedRecordsByLevel;
     }
 }

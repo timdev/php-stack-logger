@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test\Support;
@@ -18,7 +19,8 @@ class ExtendedLaminasLogger extends PsrLoggerAdapter implements TestLoggerInterf
 
     private Mock $writer;
 
-    public function __construct() {
+    public function __construct()
+    {
 
         $this->writer = new Mock();
         $logger = new Logger();
@@ -33,14 +35,13 @@ class ExtendedLaminasLogger extends PsrLoggerAdapter implements TestLoggerInterf
          * okay. We just transform them into something that resembles
          * PSR/Monolog style records here.
          */
-        return array_map(function($record){
+        return array_map(function ($record) {
             return [
                 'level' => $record['priorityName'],
                 'message' => $record['message'],
                 'context' => $record['extra']
             ];
         },
-            $this->writer->events
-        );
+            $this->writer->events);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test\Support;
@@ -24,8 +25,9 @@ class ExtendedMonologLogger extends Logger implements TestLoggerInterface
 
     public function getRecords(): array
     {
-        if (isset($this->handlers[0]) && $this->handlers[0] instanceof TestHandler)
+        if (isset($this->handlers[0]) && $this->handlers[0] instanceof TestHandler) {
             return $this->handlers[0]->getRecords();
+        }
 
         throw new \LogicException('Badly constructed test-logger. Must have a single TestHandler.');
     }

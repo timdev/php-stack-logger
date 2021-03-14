@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test\Support;
 
@@ -24,17 +26,16 @@ trait TestLoggerTrait
     public function recordAt(int $index): array
     {
         $records = $this->getRecords();
-        if(!array_key_exists($index, $records)){
+        if (!array_key_exists($index, $records)) {
             throw new \OutOfBoundsException("No record at index {$index}");
         }
         return $records[$index];
-
     }
 
     public function contextAt(int $recordIndex): array
     {
         $record = $this->recordAt($recordIndex);
-        if (!is_array($record['context'] ?? null)){
+        if (!is_array($record['context'] ?? null)) {
             throw new \UnexpectedValueException("Missing/invalid context at record index: {$recordIndex}");
         }
         return $record['context'];

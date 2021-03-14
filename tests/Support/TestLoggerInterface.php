@@ -34,5 +34,4 @@ interface TestLoggerInterface extends LoggerInterface
     public function getContext(): array;
 
     public function countContext(): int;
-
 }

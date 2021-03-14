@@ -1,5 +1,7 @@
 <?php
+
 /** @noinspection ReturnTypeCanBeDeclaredInspection */
+
 /** @noinspection StaticInvocationViaThisInspection */
 declare(strict_types=1);
 
@@ -22,7 +24,7 @@ class MonologTest extends BaseTest
         return $this->log = new ExtendedMonologLogger();
     }
 
-    public function test_withName_cloning(): void
+    public function testWithnameCloning(): void
     {
         // push some context.
         $log = $this->makeTestSubject()->withContext(['basic' => 'context']);
@@ -49,7 +51,7 @@ class MonologTest extends BaseTest
         $this->assertTrue($newChannel->extraMethod());
     }
 
-    public function test_withName_clones_track_parent_context(): void
+    public function testWithnameClonesTrackParentContext(): void
     {
 
         $original = $this->log->withContext(['original' => 'context']);
@@ -68,7 +70,7 @@ class MonologTest extends BaseTest
         $this->assertEquals(2, $renamed->contextCountAt(0));
     }
 
-    public function test_withName_convoluted(): void
+    public function testWithnameConvoluted(): void
     {
         /*
          This test is about doing a complex set of withName/withContext/addContext
@@ -80,7 +82,7 @@ class MonologTest extends BaseTest
         $second = $first->withName('second');
         $second = $second->withContext(['second' => 'context']);
 
-        $first->addContext(['first'=>'context']);
+        $first->addContext(['first' => 'context']);
         $third = $second->withContext(['third' => 'context'])->withName('third');
 
         $second->info('Second should have 2 context');
@@ -99,6 +101,5 @@ class MonologTest extends BaseTest
         $this->assertCount(2, $first->getChannelRecords()[0]['context']);
 
         $this->assertEquals(2, $first->contextCountAt(0));
-
     }
 }

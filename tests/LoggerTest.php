@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
@@ -11,7 +13,8 @@ class LoggerTest extends BaseTest
 {
     protected function makeTestSubject(): ExtendedTestLogger
     {
-        ExtendedTestLogger::resetRecords();;
+        ExtendedTestLogger::resetRecords();
+        ;
         return new ExtendedTestLogger();
     }
 }

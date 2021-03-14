@@ -1,5 +1,7 @@
 <?php
+
 /** @noinspection ReturnTypeCanBeDeclaredInspection */
+
 /** @noinspection StaticInvocationViaThisInspection */
 declare(strict_types=1);
 
@@ -118,7 +120,7 @@ abstract class BaseTest extends TestCase
             [
                 // A callable context element that returns the number of
                 // elements in the record's context.
-                'counter' => function(array $ctx) {
+                'counter' => function (array $ctx) {
                     return count($ctx);
                 }
             ]
@@ -148,7 +150,7 @@ abstract class BaseTest extends TestCase
     {
         $logger = $this->log;
         $numLoggers = 20;
-        foreach(range(1, $numLoggers) as $i) {
+        foreach (range(1, $numLoggers) as $i) {
             $logger = $logger->withContext(["gen{$i}" => $i]);
         }
         $logger->withContext(["count" => fn($ctx) => count($ctx)]);
