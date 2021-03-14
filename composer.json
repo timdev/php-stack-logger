@@ -23,9 +23,12 @@
     "phpunit/phpunit": "^9",
     "monolog/monolog": "^2.1",
     "laminas/laminas-log": "^2.12",
-    "vimeo/psalm": "^4.6"
+    "vimeo/psalm": "^4.6",
+    "squizlabs/php_codesniffer": "^3.5"
   },
   "scripts": {
-    "test": "./vendor/bin/phpunit --bootstrap=vendor/autoload.php --color=always --testdox tests/"
+    "test": "phpunit --bootstrap=vendor/autoload.php --color=always --testdox tests/",
+    "cs-check": "phpcs",
+    "cs-fix": "phpcbf"
   }
 }
