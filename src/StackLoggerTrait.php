@@ -4,8 +4,18 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger;
 
+/**
+ * This trait can be used to implement TimDev\StackLogger\LoggerInterface when
+ * extending many PSR3-compliant loggers. For loggers that that implement their
+ * notice/info/warn/error/etc methods by calling log(), this should be all you
+ * need. But you MUST check the implementation details of the logger you're
+ * extending to ensure it will work as intended. Some popular loggers
+ * (particularly: monolog) are implemented differently, and need additional
+ * logic.
+ */
 trait StackLoggerTrait
 {
+    /** @psalm-var static  */
     protected ?LoggerInterface $parent = null;
 
     protected array $context = [];
@@ -17,7 +27,7 @@ trait StackLoggerTrait
      */
     public function withContext(array $context = []): self
     {
-        /** @var LoggerInterface&StackLoggerTrait $this */
+        /** @psalm-var static $this */
         $child = clone $this;
         $child->parent = $this;
         $child->context = $context;
@@ -42,6 +52,7 @@ trait StackLoggerTrait
      */
     public function log($level, $message, array $context = []): void
     {
+        assert(is_string($level) || is_int($level));
         // merge passed context on top of accumulated context,
         // and process callable context elements.
         $context = $this->processContext($context);
@@ -53,7 +64,7 @@ trait StackLoggerTrait
     /**
      * Merges $context on top of the instances accumulated context, and
      * processes any callable elements in the final context. Factored out from
-     * log() above, since it's occasionally usefule elsewhere (like in
+     * log() above, since it's occasionally useful elsewhere (like in
      * `MonologStackLoggerTrait::addRecord()`.
      */
     protected function processContext(array $context = []): array
@@ -61,11 +72,10 @@ trait StackLoggerTrait
         $context = array_merge($this->mergedContext(), $context);
 
         // handle any callables in final context.
-        $context = array_map(
+        return array_map(
             static fn($c) => is_callable($c) ? $c($context) : $c,
             $context
         );
-        return $context;
     }
 
     protected function mergedContext(): array

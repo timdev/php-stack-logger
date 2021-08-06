@@ -16,15 +16,15 @@ trait MonologStackLoggerTrait
     /**
      * {@inheritDoc}
      *
-     * Monolog predates PSR-3, and exposes a pubic `addRecord()` method, which
+     * Monolog predates PSR-3, and exposes a public `addRecord()` method, which
      * contains the foundational logic, and upon which its implementation of
      * log()/debug()/info()/... depend. So we override it here to preserve our
      * context-accumulation and callable-handling features.
+     *
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
-        $context = $this->processContext($context);
-        return parent::addRecord($level, $message, $context);
+        return parent::addRecord($level, $message, $this->processContext($context));
     }
 
     /**
@@ -54,4 +54,5 @@ trait MonologStackLoggerTrait
         $new->parent = $this;
         return $new;
     }
+
 }
