@@ -35,13 +35,15 @@ class ExtendedLaminasLogger extends PsrLoggerAdapter implements TestLoggerInterf
          * okay. We just transform them into something that resembles
          * PSR/Monolog style records here.
          */
-        return array_map(function ($record) {
-            return [
-                'level' => $record['priorityName'],
-                'message' => $record['message'],
-                'context' => $record['extra']
-            ];
-        },
-            $this->writer->events);
+        return array_map(
+            static function (array $record) {
+                return [
+                    'level' => $record['priorityName'],
+                    'message' => $record['message'],
+                    'context' => $record['extra']
+                ];
+            },
+            $this->writer->events
+        );
     }
 }
