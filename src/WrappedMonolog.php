@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger;
 
+use Monolog\Logger as MonologLogger;
+
 /**
  * Extends WrappedPSR3 to provide a monolog-like withName() method.
  *
- * @template T
- * @extends WrappedPSR3<T>
+ * @extends WrappedPSR3<MonologLogger>
  */
 class WrappedMonolog extends WrappedPSR3
 {
@@ -18,4 +19,5 @@ class WrappedMonolog extends WrappedPSR3
         $new->parent = $this;
         return $new;
     }
+
 }

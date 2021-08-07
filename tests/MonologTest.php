@@ -1,13 +1,11 @@
 <?php
 
-/** @noinspection ReturnTypeCanBeDeclaredInspection */
 
-/** @noinspection StaticInvocationViaThisInspection */
 declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
-use TimDev\StackLogger\Test\Support\ExtendedMonologLogger;
+use TimDev\StackLogger\Test\Support\ExtendedWrappedMonolog;
 
 /**
  * Test against monolog.
@@ -17,11 +15,12 @@ use TimDev\StackLogger\Test\Support\ExtendedMonologLogger;
  */
 class MonologTest extends BaseTest
 {
-    private ExtendedMonologLogger $log;
+    /** @var ExtendedWrappedMonolog */
+    private ExtendedWrappedMonolog $log;
 
-    protected function makeTestSubject(): ExtendedMonologLogger
+    protected function makeTestSubject(): ExtendedWrappedMonolog
     {
-        return $this->log = new ExtendedMonologLogger();
+        return $this->log = new ExtendedWrappedMonolog();
     }
 
     public function testWithnameCloning(): void
@@ -36,6 +35,7 @@ class MonologTest extends BaseTest
         // ensure the handler has accumulated records with context attached.
         $rec = $log->recordAt(0);
         $this->assertEquals('other', $rec['channel']);
+        $this->assertIsArray($rec['context']);
         $this->assertCount(1, $rec['context']);
         $this->assertEquals('context', $rec['context']['basic']);
 

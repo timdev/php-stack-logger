@@ -10,7 +10,7 @@ use Psr\Log\LogLevel;
 /**
  * Implements LoggerInterface by wrapping a PSR3 logger.
  *
- * @template L
+ * @template L of PSR3Logger
  */
 class WrappedPSR3 implements LoggerInterface
 {
@@ -35,7 +35,7 @@ class WrappedPSR3 implements LoggerInterface
     }
 
     /** @param L $logger */
-    protected function setWrapped(PSR3Logger $logger)
+    protected function setWrapped(PSR3Logger $logger): void
     {
         $this->logger = $logger;
     }
