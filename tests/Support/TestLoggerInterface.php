@@ -23,7 +23,7 @@ interface TestLoggerInterface extends LoggerInterface
     public function contextCountAt(int $recordIndex): int;
 
     /**
-     * @return array[]
+     * @psalm-return array[]
      */
     public function getRecords(): array;
 

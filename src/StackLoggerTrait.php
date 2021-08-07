@@ -25,7 +25,7 @@ trait StackLoggerTrait
      *
      * @return static
      */
-    public function withContext(array $context = []): self
+    public function withContext(array $context = []): static
     {
         /** @psalm-var static $this */
         $child = clone $this;
@@ -37,7 +37,7 @@ trait StackLoggerTrait
     /**
      * {@inheritDoc}
      */
-    public function addContext(array $context): self
+    public function addContext(array $context): static
     {
         $this->context = array_merge($this->context, $context);
         return $this;
