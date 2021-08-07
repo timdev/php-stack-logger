@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace TimDev\StackLogger\Test\Support;
 
 use Psr\Log\Test\TestLogger;
-use TimDev\StackLogger\WrapLogger;
+use TimDev\StackLogger\WrappedPSR3;
 
-class ExtendedWrapLogger extends WrapLogger implements TestLoggerInterface
+class ExtendedWrappedPSR3 extends WrappedPSR3 implements TestLoggerInterface
 {
     // Test-Helpers
     use TestLoggerTrait;

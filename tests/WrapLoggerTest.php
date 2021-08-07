@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace TimDev\StackLogger\Test;
 
 
-use TimDev\StackLogger\Test\Support\ExtendedWrapLogger;
+use TimDev\StackLogger\Test\Support\ExtendedWrappedPSR3;
 use TimDev\StackLogger\Test\Support\TestLoggerInterface;
-use TimDev\StackLogger\WrapLogger;
+use TimDev\StackLogger\WrappedPSR3;
 
 /**
  * Test against monolog.
@@ -19,6 +19,6 @@ class WrapLoggerTest extends BaseTest
 {
     protected function makeTestSubject(): TestLoggerInterface
     {
-        return new ExtendedWrapLogger();
+        return new ExtendedWrappedPSR3();
     }
 }

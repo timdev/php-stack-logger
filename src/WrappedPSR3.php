@@ -8,9 +8,11 @@ use Psr\Log\LoggerInterface as PSR3Logger;
 use Psr\Log\LogLevel;
 
 /**
+ * Implements LoggerInterface by wrapping a PSR3 logger.
+ *
  * @template L
  */
-class WrapLogger implements LoggerInterface
+class WrappedPSR3 implements LoggerInterface
 {
     /** @var L */
     private PSR3Logger $logger;
@@ -20,20 +22,22 @@ class WrapLogger implements LoggerInterface
 
     protected array $context = [];
 
-    /**
-     * @param L $logger
-     */
+    /** @param L $logger */
     public function __construct(PSR3Logger $logger)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * @return L
-     */
+    /** @return L */
     public function getWrapped(): PSR3Logger
     {
         return $this->logger;
+    }
+
+    /** @param L $logger */
+    protected function setWrapped(PSR3Logger $logger)
+    {
+        $this->logger = $logger;
     }
 
     /** Context Handling */
