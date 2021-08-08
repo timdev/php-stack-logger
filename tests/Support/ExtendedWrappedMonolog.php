@@ -6,10 +6,11 @@ namespace TimDev\StackLogger\Test\Support;
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger as MonologLogger;
-use Psr\Log\Test\TestLogger;
 use TimDev\StackLogger\WrappedMonolog;
-use TimDev\StackLogger\WrappedPSR3;
 
+/**
+ * @psalm-type MonologRecord = array{message:string, context:array, channel:string}
+ */
 class ExtendedWrappedMonolog extends WrappedMonolog implements TestLoggerInterface
 {
     // Test-Helpers
@@ -25,7 +26,7 @@ class ExtendedWrappedMonolog extends WrappedMonolog implements TestLoggerInterfa
         );
     }
 
-    /** @return array[] */
+    /** @return array<MonologRecord> */
     public function getRecords(): array
     {
         return $this->handler->getRecords();
@@ -36,7 +37,7 @@ class ExtendedWrappedMonolog extends WrappedMonolog implements TestLoggerInterfa
      * loggers inherit handlers from their parent, but it's useful in some tests
      * to inspect log messages written by a particular instance.
      *
-     * @return array[]
+     * @return array<MonologRecord>
      */
     public function getChannelRecords(): array
     {

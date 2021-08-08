@@ -15,7 +15,7 @@ use Psr\Log\LogLevel;
 class WrappedPSR3 implements LoggerInterface
 {
     /** @var L */
-    private PSR3Logger $logger;
+    protected PSR3Logger $logger;
 
     /** @psalm-var static  */
     protected ?LoggerInterface $parent = null;
@@ -40,7 +40,12 @@ class WrappedPSR3 implements LoggerInterface
         $this->logger = $logger;
     }
 
-    /** Context Handling */
+    /**
+     * Context Handling
+     *
+     * @param array $context
+     * @return static<L>
+     */
     public function withContext(array $context = []): static
     {
         $child = clone $this;
@@ -134,8 +139,4 @@ class WrappedPSR3 implements LoggerInterface
     {
         $this->log(LogLevel::DEBUG, $message, $context);
     }
-
-
-
-
 }

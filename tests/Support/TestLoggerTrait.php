@@ -9,12 +9,15 @@ namespace TimDev\StackLogger\Test\Support;
  *
  * If your logger implementation has some way of buffering records as an array,
  * you can probably leverage this, overriding getRecords() as necessary.
+ *
+ * @psalm-import-type LogRecord from TestLoggerInterface
  */
 trait TestLoggerTrait
 {
-    public $records = [];
+    /** @var list<LogRecord> */
+    public array $records = [];
 
-    public $recordsByLevel = [];
+    public array $recordsByLevel = [];
 
     /* Methods for inspecting accumulated records */
 
@@ -23,13 +26,9 @@ trait TestLoggerTrait
         return $this->records;
     }
 
-    public function recordAt(int $index): array
+    public function contextKeysAt(int $recordIndex): array
     {
-        $records = $this->getRecords();
-        if (!array_key_exists($index, $records)) {
-            throw new \OutOfBoundsException("No record at index {$index}");
-        }
-        return $records[$index];
+        return array_keys($this->contextAt($recordIndex));
     }
 
     public function contextAt(int $recordIndex): array
@@ -41,9 +40,14 @@ trait TestLoggerTrait
         return $record['context'];
     }
 
-    public function contextKeysAt(int $recordIndex): array
+    /** @return LogRecord */
+    public function recordAt(int $index): array
     {
-        return array_keys($this->contextAt($recordIndex));
+        $records = $this->getRecords();
+        if (!array_key_exists($index, $records)) {
+            throw new \OutOfBoundsException("No record at index {$index}");
+        }
+        return $records[$index];
     }
 
     public function contextValuesAt(int $recordIndex): array

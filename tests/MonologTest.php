@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
@@ -15,17 +14,19 @@ use TimDev\StackLogger\Test\Support\ExtendedWrappedMonolog;
  */
 class MonologTest extends BaseTest
 {
-    /** @var ExtendedWrappedMonolog */
-    private ExtendedWrappedMonolog $log;
+
+//    /** @var ExtendedWrappedMonolog */
+//    private ExtendedWrappedMonolog $log;
 
     protected function makeTestSubject(): ExtendedWrappedMonolog
     {
-        return $this->log = new ExtendedWrappedMonolog();
+        return new ExtendedWrappedMonolog();
     }
 
     public function testWithnameCloning(): void
     {
         // push some context.
+        /** @var ExtendedWrappedMonolog $log */
         $log = $this->makeTestSubject()->withContext(['basic' => 'context']);
 
         // get a clone with a new monolog channel-name, and log to it.
@@ -35,7 +36,6 @@ class MonologTest extends BaseTest
         // ensure the handler has accumulated records with context attached.
         $rec = $log->recordAt(0);
         $this->assertEquals('other', $rec['channel']);
-        $this->assertIsArray($rec['context']);
         $this->assertCount(1, $rec['context']);
         $this->assertEquals('context', $rec['context']['basic']);
 
@@ -53,8 +53,7 @@ class MonologTest extends BaseTest
 
     public function testWithnameClonesTrackParentContext(): void
     {
-
-        $original = $this->log->withContext(['original' => 'context']);
+        $original = $this->makeTestSubject()->withContext(['original' => 'context']);
 
         // withName()'d clone includes parent's context.
         $renamed = $original->withName('new');

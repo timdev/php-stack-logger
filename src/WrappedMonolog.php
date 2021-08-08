@@ -15,9 +15,11 @@ class WrappedMonolog extends WrappedPSR3
 {
     public function withName(string $name): static
     {
-        $new = new static($this->getWrapped()->withName($name));
+        // this works, but requires WrappedPSR3::$logger to be non-private.
+        // Is there a better way?
+        $new = clone $this;
+        $new->logger = $this->logger->withName($name);
         $new->parent = $this;
         return $new;
     }
-
 }

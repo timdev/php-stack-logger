@@ -7,6 +7,10 @@ namespace TimDev\StackLogger\Test\Support;
 use Psr\Log\Test\TestLogger;
 use TimDev\StackLogger\WrappedPSR3;
 
+/**
+ * @psalm-import-type LogRecord from TestLoggerInterface
+ * @extends WrappedPSR3<\Psr\Log\LoggerInterface>
+ */
 class ExtendedWrappedPSR3 extends WrappedPSR3 implements TestLoggerInterface
 {
     // Test-Helpers
@@ -14,15 +18,15 @@ class ExtendedWrappedPSR3 extends WrappedPSR3 implements TestLoggerInterface
 
     public function __construct()
     {
-        $logger = new TestLogger();
-        parent::__construct($logger);
+        parent::__construct(new TestLogger());
     }
 
+    /** return array<LogRecord> */
     public function getRecords(): array
     {
         /** @var TestLogger $wrapped */
         $wrapped = $this->getWrapped();
-        /** @var array[] */
+        /** @var array<LogRecord> */
         return $wrapped->records;
     }
 }

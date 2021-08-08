@@ -153,7 +153,7 @@ abstract class BaseTest extends TestCase
         foreach (range(1, $numLoggers) as $i) {
             $logger = $logger->withContext(["gen{$i}" => $i]);
         }
-        $logger->withContext(["count" => fn($ctx) => count($ctx)]);
+        $logger->withContext(["count" => fn(array $ctx) => count($ctx)]);
         $logger->info("I come from a long lineage", ['final' => 'I should be the 21st context element']);
         $this->assertCount($numLoggers + 1, $logger->recordAt(0)['context']);
     }
