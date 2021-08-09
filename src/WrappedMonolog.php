@@ -13,6 +13,11 @@ use Monolog\Logger as MonologLogger;
  */
 class WrappedMonolog extends WrappedPSR3
 {
+    public function __construct(MonologLogger $logger)
+    {
+        parent::__construct($logger);
+    }
+
     public function withName(string $name): static
     {
         // this works, but requires WrappedPSR3::$logger to be non-private.
