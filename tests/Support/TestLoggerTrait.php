@@ -5,30 +5,23 @@ declare(strict_types=1);
 namespace TimDev\StackLogger\Test\Support;
 
 /**
- * A trait that implements TestLoggerInterface.
+ * A trait that implements most of TestLoggerInterface.
  *
- * If your logger implementation has some way of buffering records as an array,
- * you can probably leverage this, overriding getRecords() as necessary.
+ * Test subjects buffer messages somehow, and implement getRecords() to expose
+ * the buffered messages to the tests.
  *
  * @psalm-import-type LogRecord from TestLoggerInterface
  */
 trait TestLoggerTrait
 {
-    /** @var list<LogRecord> */
-    public array $records = [];
-
-    public array $recordsByLevel = [];
-
-    /* Methods for inspecting accumulated records */
-
-    public function getRecords(): array
+    /** @return LogRecord */
+    public function recordAt(int $index): array
     {
-        return $this->records;
-    }
-
-    public function contextKeysAt(int $recordIndex): array
-    {
-        return array_keys($this->contextAt($recordIndex));
+        $records = $this->getRecords();
+        if (!array_key_exists($index, $records)) {
+            throw new \OutOfBoundsException("No record at index {$index}");
+        }
+        return $records[$index];
     }
 
     public function contextAt(int $recordIndex): array
@@ -40,19 +33,14 @@ trait TestLoggerTrait
         return $record['context'];
     }
 
-    /** @return LogRecord */
-    public function recordAt(int $index): array
-    {
-        $records = $this->getRecords();
-        if (!array_key_exists($index, $records)) {
-            throw new \OutOfBoundsException("No record at index {$index}");
-        }
-        return $records[$index];
-    }
-
     public function contextValuesAt(int $recordIndex): array
     {
         return array_values($this->contextAt($recordIndex));
+    }
+
+    public function contextKeysAt(int $recordIndex): array
+    {
+        return array_keys($this->contextAt($recordIndex));
     }
 
     public function contextCountAt(int $recordIndex): int

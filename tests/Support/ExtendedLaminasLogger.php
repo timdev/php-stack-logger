@@ -7,14 +7,15 @@ namespace TimDev\StackLogger\Test\Support;
 use Laminas\Log\Logger;
 use Laminas\Log\PsrLoggerAdapter;
 use Laminas\Log\Writer\Mock;
-use TimDev\StackLogger\WrappedPSR3;
+use TimDev\StackLogger\Psr3Logger;
 
 /**
- * An extension of the PsrLoggerAdapter from laminas-Log.
+ * Implements TestLoggerInterface by wrapping a \Laminas\Log\PsrLoggerAdapter.
+ * PsrLoggerAdapter decorates \Laminas\Log\Logger to make it PSR3 compatible.
  *
  * @psalm-import-type LogRecord from TestLoggerInterface
  */
-class ExtendedLaminasLogger extends WrappedPSR3 implements TestLoggerInterface
+class ExtendedLaminasLogger extends Psr3Logger implements TestLoggerInterface
 {
     use TestLoggerTrait;
 
@@ -31,8 +32,7 @@ class ExtendedLaminasLogger extends WrappedPSR3 implements TestLoggerInterface
 
     public function getRecords(): array
     {
-        /*
-         * Laminas Log has a different internal record structure, but that's
+        /* Laminas Log has a different internal record structure, but that's
          * okay. We just transform them into something that resembles
          * PSR/Monolog style records here.
          */

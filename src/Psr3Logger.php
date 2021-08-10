@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger;
 
-use Psr\Log\LoggerInterface as PSR3Logger;
+use Psr\Log\LoggerInterface as PsrInterface;
 use Psr\Log\LogLevel;
 
 /**
  * Implements LoggerInterface by wrapping a PSR3 logger.
  *
- * @template L of PSR3Logger
+ * @template L of PsrInterface
  */
-class WrappedPSR3 implements LoggerInterface
+class Psr3Logger implements LoggerInterface
 {
     /** @var L */
-    protected PSR3Logger $logger;
+    protected PsrInterface $logger;
 
     /** @psalm-var static  */
     protected ?LoggerInterface $parent = null;
@@ -23,19 +23,19 @@ class WrappedPSR3 implements LoggerInterface
     protected array $context = [];
 
     /** @param L $logger */
-    public function __construct(PSR3Logger $logger)
+    public function __construct(PsrInterface $logger)
     {
         $this->logger = $logger;
     }
 
     /** @return L */
-    public function getWrapped(): PSR3Logger
+    public function getWrapped(): PsrInterface
     {
         return $this->logger;
     }
 
     /** @param L $logger */
-    protected function setWrapped(PSR3Logger $logger): void
+    protected function setWrapped(PsrInterface $logger): void
     {
         $this->logger = $logger;
     }

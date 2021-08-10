@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
-use TimDev\StackLogger\Test\Support\TestLoggerInterface;
+use TimDev\StackLogger\Test\Support\ExtendedLaminasLogger;
 
 /**
- * Runs the tests defined in BaseTest but with an instance based on
- * PsrLoggerAdapter from laminas-log.
+ * Test against a laminas-log PsrLoggerAdapter instance.
  */
 class LaminasTest extends BaseTest
 {
-    protected function makeTestSubject(): TestLoggerInterface
+    protected function makeTestSubject(): ExtendedLaminasLogger
     {
         return new Support\ExtendedLaminasLogger();
     }

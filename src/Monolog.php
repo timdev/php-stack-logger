@@ -7,11 +7,11 @@ namespace TimDev\StackLogger;
 use Monolog\Logger as MonologLogger;
 
 /**
- * Extends WrappedPSR3 to provide a monolog-like withName() method.
+ * Extends Psr3Logger to provide a monolog-like withName() method.
  *
- * @extends WrappedPSR3<MonologLogger>
+ * @extends Psr3Logger<MonologLogger>
  */
-class WrappedMonolog extends WrappedPSR3
+class Monolog extends Psr3Logger
 {
     public function __construct(MonologLogger $logger)
     {

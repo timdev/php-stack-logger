@@ -1,8 +1,5 @@
 <?php
 
-/** @noinspection ReturnTypeCanBeDeclaredInspection */
-
-/** @noinspection StaticInvocationViaThisInspection */
 declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
@@ -19,14 +16,9 @@ use TimDev\StackLogger\Test\Support\TestLoggerInterface;
  */
 abstract class BaseTest extends TestCase
 {
-    /**
-     * This is private because property types are invariant (since they're r/w).
-     * Concrete subclasses can rely on makeTextSubject() directly in each test,
-     * or define their own typed private $log.
-     */
-    private TestLoggerInterface $log;
-
     abstract protected function makeTestSubject(): TestLoggerInterface;
+
+    private TestLoggerInterface $log;
 
     public function setUp(): void
     {

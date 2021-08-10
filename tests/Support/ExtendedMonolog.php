@@ -6,16 +6,21 @@ namespace TimDev\StackLogger\Test\Support;
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger as MonologLogger;
-use TimDev\StackLogger\WrappedMonolog;
+use TimDev\StackLogger\Monolog;
 
 /**
+ * TestLoggerInterface implementation that extends WrappedMonolog.
+ *
  * @psalm-type MonologRecord = array{message:string, context:array, channel:string}
  */
-class ExtendedWrappedMonolog extends WrappedMonolog implements TestLoggerInterface
+class ExtendedMonolog extends Monolog implements TestLoggerInterface
 {
-    // Test-Helpers
     use TestLoggerTrait;
 
+    /**
+     * We keep a reference to the monolog Handler here so we can get at the
+     * records it stores.
+     */
     protected TestHandler $handler;
 
     public function __construct()
@@ -53,6 +58,7 @@ class ExtendedWrappedMonolog extends WrappedMonolog implements TestLoggerInterfa
     {
         return $this->getChannelRecords()[$index] ?? null;
     }
+
     /**
      * Used in a test to demonstrate static analysis understands phpDoc
      * directives in the trait.

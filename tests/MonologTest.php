@@ -4,29 +4,24 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
-use TimDev\StackLogger\Test\Support\ExtendedWrappedMonolog;
+use TimDev\StackLogger\Test\Support\ExtendedMonolog;
 
 /**
  * Test against monolog.
  *
- * Uses ExtendedMonologLogger as a subject, with additional test method(s) for
- * monolog-specific stuff.
+ * WrappedMonolog supports monolog's withName() method, so we have some extra
+ * cases here to test that support.
  */
 class MonologTest extends BaseTest
 {
-
-//    /** @var ExtendedWrappedMonolog */
-//    private ExtendedWrappedMonolog $log;
-
-    protected function makeTestSubject(): ExtendedWrappedMonolog
+    protected function makeTestSubject(): ExtendedMonolog
     {
-        return new ExtendedWrappedMonolog();
+        return new ExtendedMonolog();
     }
 
     public function testWithnameCloning(): void
     {
         // push some context.
-        /** @var ExtendedWrappedMonolog $log */
         $log = $this->makeTestSubject()->withContext(['basic' => 'context']);
 
         // get a clone with a new monolog channel-name, and log to it.

@@ -1,42 +1,34 @@
 # PHP Stack Logger
 
-Extend your PSR-3 logger with context accumulation and callable context elements.
+Wrap your PSR-3 logger with context accumulation and callable context elements.
 
 ## Inspiration
 
-Inspired by the [similar functionality] in [pinojs]. Implementation details differ, but the core idea remains.
+Inspired by the [similar functionality] in [pinojs]. Implementation details 
+differ, but the core idea remains.
 
 ## Approach
 
-This package provides a generic `StackLoggerTrait` that's suitable for use extending PSR-3 implementations that are
-patterned `\Psr\Log\AbstractLogger` or `\Psr\Log\LoggerTrait`, where all we need to do is intercept calls to `log()`.
-For such loggers, you can simply subclass the logger class and `use StackLoggerTrait`.
+The provided [implementation](src/WrappedPSR3.php) decorates any implementation 
+of the [PSR3 LoggerInterface], providing implementation of the additional 
+`withContext` and `addContext` methods defined in this library's
+[LoggerInterface](src/LoggerInterface.php).
 
-Other implementations might require more work. [monolog], for example, predates PSR-3 and has at its core a method named
-`addRecord()` (Monolog's `log()`, as well as the level-specific methods all delegate to `addRecord()`). This package 
-ships a `MonologStackLoggerTrait` that extends `StackLoggerTrait` to intercept calls to `addRecord()` and `withName()` 
-(see comments in the source for more info).
-
-## Justification
-
-After an initial attempt at implementation of a decorator that wraps a logger, it became increasing clear to me that 
-extending the logger implementation results in a simpler implementation. For instance, child loggers can have addtional
-processors or handlers added, without adding those to the parent. 
+Also provided is `WrappedMonolog`, which decorates a `Monolog\Logger` and 
+provides a working `withName` implementation.
 
 ## Usage
 
-### Child Loggers
+### Context Stacking
 
 ```php
-use TimDev\StackLogger\StackLoggerTrait;
+use TimDev\StackLogger\Psr3Logger;
 
-// Extend your favorite logger and apply the trait.
-class MyLogger extends \Psr\Log\NullLogger
-{
-    use StackLoggerTrait;
-}
+// can be anything that implements PSR-3
+$yourLogger = $container->get(\Psr\Log\LoggerInterface::class);
 
-$mainLogger = new MyLogger();
+// Decorate it 
+$mainLogger = new Psr3Logger($yourLogger);
 
 // it works like a regular PSR-3 logger.
 $mainLogger->info("Hello, World.");
@@ -60,7 +52,7 @@ This can be useful in any situation where want to carry some context through suc
 /**
  * Imagine this is a long method that logs a bunch of stuff.
  */
-function complexProcessing(User $user, LoggerInterface $logger){
+function complexProcessing(User $user, \TimDev\StackLogger\LoggerInterface $logger){
     $logger = $logger->child(['user-id' => $user->id]);
     $logger->info("Begin processing");
     // => [2020-10-17 17:40:53] app.INFO: Begin processing. { "user-id": 123 }
@@ -81,34 +73,42 @@ function complexProcessing(User $user, LoggerInterface $logger){
     $logger->info("Finished processing user.");
     // => [2020-10-17 17:40:53] app.INFO: Finished processing user. { "user-id": 123 }
 }
-
-}
 ```
 
-### Callable Context
+### Dynamic (Callable) Context
 
-The other feature provided here is callable context. Any context elements that are `callable` will be invoked at 
-logging-time, and the result of the computation will be logged. Callables take a single array argument: 
+The other feature provided here is callable context. Any context elements that 
+are `callable` will be invoked at logging-time, and the result of the 
+computation will be logged. Callables take a single array argument: 
 `function(array $context): mixed`
 
 ```php
 $startTime = microtime(true);
-$logger = (new MyLogger())->child([    
+$logger = $logger->child([    
     'elapsed_ms' => fn() => (microtime(true) - $startTime) * 1000000 * 1000,
     'context_count' => fn($ctx) => count($ctx)
 ]);
-
-// Each message will contain context like: ['elapsed_ms' => 1523, 'context_count' => 2]
+// ... later that day ...
+$logger->info('Something happened later.');
+// => [2020-10-17 17:40:53] app.INFO: Something happened later. { "elapsed_ms": 1523, "context_count": 2 }
 ```
+
+**NOTE:** you should carefully consider the performance implications when using
+callables in your stacked context. Context is processed *before* invoking the
+wrapped logger's methods. The callables will be invoked on every logging method
+call, even if the underlying logger is configured to ignore the log-level.
 
 ## To Do
 
-- [ ] Think of a better name than `StackLogger`
-- [ ] Maybe provide a Monolog-derived class that composes the trait for convenience
-- [ ] Add some tests using other logging implementations (Laminas-Log, Bref, Analog?). 
+- [ ] Make WrappedMonolog implement Monolog's ResettableInterface?
+- [ ] Think of a better name than `StackLogger` 
+- [ ] Consider how this might play with Laravel, the insanely popular PHP 
+      framework that I do my best to avoid. 😜
+
 
 [similar functionality]: https://getpino.io/#/docs/child-loggers
-[pinojs]: https://github.com/pinojs/pino 
+[pinojs]: https://github.com/pinojs/pino
+[PSR3 LoggerInterface]: https://www.php-fig.org/psr/psr-3/
 [monolog]: https://github.com/Seldaek/monolog
 [addRecord]: https://github.com/Seldaek/monolog/blob/a54cd1f1782f62714e4d28651224316bb5540e08/src/Monolog/Logger.php#L278-L336
 [withName]: https://github.com/Seldaek/monolog/blob/a54cd1f1782f62714e4d28651224316bb5540e08/src/Monolog/Logger.php#L163-L172
