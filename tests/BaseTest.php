@@ -84,14 +84,14 @@ abstract class BaseTest extends TestCase
         );
     }
 
-    public function textMergesContext(): void
+    public function testMergesContext(): void
     {
         $log = $this->log->withContext(['a' => 'Alice']);
 
         // Alice should be overwritten with Allison in child.
         $log
             ->withContext(['a' => 'Allison', 'b' => 'Bob'])
-            ->info('Allison and Bruno', ['b' => 'Bruno']);
+            ->emergency('Allison and Bruno', ['b' => 'Bruno']);
         $this->assertEquals(
             ['Allison', 'Bruno'],
             $this->log->contextValuesAt(0)
@@ -101,7 +101,7 @@ abstract class BaseTest extends TestCase
         $log->info('Alice alone.');
         $this->assertEquals(
             ['a' => 'Alice'],
-            $this->log->contextAt(0)
+            $this->log->contextAt(1)
         );
     }
 
