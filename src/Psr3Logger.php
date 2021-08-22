@@ -25,7 +25,7 @@ class Psr3Logger implements LoggerInterface
     /** @param L $logger */
     public function __construct(PsrInterface $logger)
     {
-        $this->logger = $logger;
+        $this->setWrapped($logger);
     }
 
     /** @return L */

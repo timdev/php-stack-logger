@@ -28,7 +28,7 @@
     "psalm/plugin-phpunit": "^0.16.1"
   },
   "scripts": {
-    "test": "phpunit --coverage-text --colors=always --testdox",
+    "test": "XDEBUG_MODE=coverage phpunit --coverage-text --colors=always --testdox",
     "cs-check": "phpcs",
     "cs-fix": "phpcbf"
   }

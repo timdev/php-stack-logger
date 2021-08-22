@@ -98,7 +98,7 @@ abstract class BaseTest extends TestCase
         );
 
         // But original logger should still have (only) Alice.
-        $log->info('Alice alone.');
+        $log->critical('Alice alone.');
         $this->assertEquals(
             ['a' => 'Alice'],
             $this->log->contextAt(1)
@@ -130,7 +130,7 @@ abstract class BaseTest extends TestCase
         $start = microtime(true);
         $child2 = $logger->withContext(['elapsed_micros' => fn() => 1000000 * (microtime(true) - $start)]);
         usleep(1000);
-        $child2->info('At least 1000 μ-sec have passed.');
+        $child2->alert('At least 1000 μ-sec have passed.');
         $this->assertGreaterThan(1000, $child2->contextAt(2)['elapsed_micros']);
     }
 
@@ -146,7 +146,7 @@ abstract class BaseTest extends TestCase
             $logger = $logger->withContext(["gen{$i}" => $i]);
         }
         $logger->withContext(["count" => fn(array $ctx) => count($ctx)]);
-        $logger->info("I come from a long lineage", ['final' => 'I should be the 21st context element']);
+        $logger->error("I come from a long lineage", ['final' => 'I should be the 21st context element']);
         $this->assertCount($numLoggers + 1, $logger->recordAt(0)['context']);
     }
 }
