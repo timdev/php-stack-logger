@@ -46,7 +46,8 @@ $mainLogger->info("Still here, with no accumulated context!");
 // => [2020-10-17 17:40:53] app.INFO: Still here, with no accumulated context!
 ```
 
-This can be useful in any situation where want to carry some context through successive calls.
+This can be useful in any situation where want to carry some context through 
+successive calls.
 
 ```php
 /**
