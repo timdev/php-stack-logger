@@ -23,4 +23,6 @@ interface LoggerInterface extends \Psr\Log\LoggerInterface
      * logger onwards as an argument.
      */
     public function addContext(array $context): static;
+
+    public static function getNullLogger(): static;
 }

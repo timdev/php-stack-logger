@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger;
 
+use Monolog\Handler\NullHandler;
 use Monolog\Logger as MonologLogger;
 
 /**
@@ -26,5 +27,10 @@ class Monolog extends Psr3Logger
         $new->logger = $this->logger->withName($name);
         $new->parent = $this;
         return $new;
+    }
+
+    public static function getNullLogger(): static
+    {
+        return new static(new MonologLogger('null', [new NullHandler()]));
     }
 }

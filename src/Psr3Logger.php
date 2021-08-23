@@ -142,4 +142,9 @@ class Psr3Logger implements LoggerInterface
     {
         $this->log(LogLevel::DEBUG, $message, $context);
     }
+
+    public static function getNullLogger(): static
+    {
+        return new static(new \Psr\Log\NullLogger());
+    }
 }
