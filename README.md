@@ -4,8 +4,8 @@ Wrap your PSR-3 logger with context accumulation and callable context elements.
 
 ## Inspiration
 
-Inspired by the [similar functionality] in [pinojs]. Implementation details 
-differ, but the core idea remains.
+Inspired by the [similar functionality] in [pinojs]. Design and implementation 
+details differ, but the core idea remains: 
 
 ## Approach
 
@@ -54,12 +54,12 @@ successive calls.
  * Imagine this is a long method that logs a bunch of stuff.
  */
 function complexProcessing(User $user, \TimDev\StackLogger\StackLogger $logger){
-    $logger = $logger->child(['user-id' => $user->id]);
+    $logger = $logger->withContext(['user-id' => $user->id]);
     $logger->info("Begin processing");
     // => [2020-10-17 17:40:53] app.INFO: Begin processing. { "user-id": 123 }
     
     foreach($user->getMemberships() as $membership){
-        $l = $logger->child(['membership_id'=>$membership->id]);
+        $l = $logger->withContext(['membership_id'=>$membership->id]);
         $l->info("Checking membership");
         // => [2020-10-17 17:40:53] app.INFO: Checking membership. { "user-id": 123, 'membership-id' => 1001 }
         if ($membership->isExpired()){
@@ -85,7 +85,7 @@ computation will be logged. Callables take a single array argument:
 
 ```php
 $startTime = microtime(true);
-$logger = $logger->child([    
+$logger = $logger->withContext([    
     'elapsed_ms' => fn() => (microtime(true) - $startTime) * 1000000 * 1000,
     'context_count' => fn($ctx) => count($ctx)
 ]);

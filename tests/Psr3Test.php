@@ -10,7 +10,7 @@ use TimDev\StackLogger\Test\Support\TestStackLogger;
 /**
  * Test using a wrapped \Psr\Log\TestStackLogger.
  */
-class PsrTestLoggerTest extends BaseTest
+class Psr3Test extends BaseTest
 {
     protected function makeTestSubject(): TestStackLogger
     {
