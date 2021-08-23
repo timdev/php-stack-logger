@@ -1,5 +1,5 @@
 # Select image from https://hub.docker.com/_/php/
-image: php:7.4-cli
+image: php:8.0-cli
 
 # Select what we should cache
 cache:
@@ -25,9 +25,9 @@ before_script:
 # Install all project dependencies
 - php composer.phar install
 
-# To start, we're just testing against 7.4
+# To start, we're just testing against 8.0
 # @todo Figure out how to test across a range of versions.
-test:php7.4:
+test:php8.0:
   script:
   - vendor/bin/phpunit --coverage-text
 
