@@ -3,7 +3,7 @@
 namespace TimDev\StackLogger\Test\Support;
 
 use OutOfBoundsException;
-use TimDev\StackLogger\LoggerInterface;
+use TimDev\StackLogger\StackLogger;
 
 /**
  * The unit tests expect to test loggers that implement this interface, which
@@ -13,7 +13,7 @@ use TimDev\StackLogger\LoggerInterface;
  *
  * @psalm-type LogRecord = array{message:string, context:array, channel:string}
  */
-interface TestLoggerInterface extends LoggerInterface
+interface TestStackLogger extends StackLogger
 {
     /**
      * Returns an array of all messages logged to the log destination. Calling

@@ -12,13 +12,13 @@ use Psr\Log\LogLevel;
  *
  * @template L of PsrInterface
  */
-class Psr3Logger implements LoggerInterface
+class Psr3StackLogger implements StackLogger
 {
     /** @var L */
     protected PsrInterface $logger;
 
     /** @psalm-var static  */
-    protected ?LoggerInterface $parent = null;
+    protected ?StackLogger $parent = null;
 
     protected array $context = [];
 

@@ -10,9 +10,9 @@ use Monolog\Logger as MonologLogger;
 /**
  * Extends Psr3Logger to provide a monolog-like withName() method.
  *
- * @extends Psr3Logger<MonologLogger>
+ * @extends Psr3StackLogger<MonologLogger>
  */
-class Monolog extends Psr3Logger
+class MonologStackLogger extends Psr3StackLogger
 {
     public function __construct(MonologLogger $logger)
     {

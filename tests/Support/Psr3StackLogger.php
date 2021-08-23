@@ -6,17 +6,17 @@ namespace TimDev\StackLogger\Test\Support;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\Test\TestLogger;
-use TimDev\StackLogger\Psr3Logger;
+use TimDev\StackLogger\Psr3StackLogger as BasePsr3StackLogger;
 
 /**
- * Implements TestLoggerInterface using WrappedPSR3 with Psr\Log\Test\TestLogger
+ * Implements TestStackLogger using WrappedPSR3 with Psr\Log\Test\TestLogger
  * as the underlying logger. This is just about as simple as we can get for
  * testing.
  *
- * @psalm-import-type LogRecord from TestLoggerInterface
- * @extends Psr3Logger<LoggerInterface>
+ * @psalm-import-type LogRecord from TestStackLogger
+ * @extends BasePsr3StackLogger<LoggerInterface>
  */
-class ExtendedPsr3Logger extends Psr3Logger implements TestLoggerInterface
+class Psr3StackLogger extends BasePsr3StackLogger implements TestStackLogger
 {
     // Test-Helpers
     use TestLoggerTrait;

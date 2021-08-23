@@ -9,26 +9,26 @@ differ, but the core idea remains.
 
 ## Approach
 
-The provided [implementation](src/WrappedPSR3.php) decorates any implementation 
-of the [PSR3 LoggerInterface], providing implementation of the additional 
-`withContext` and `addContext` methods defined in this library's
-[LoggerInterface](src/LoggerInterface.php).
+The provided [implementation](src/Psr3StackLogger.php) decorates any
+implementation of the [PSR3 LoggerInterface], providing implementation of the
+additional `withContext` and `addContext` methods defined in this library's
+[StackLogger interface](src/StackLogger.php).
 
-Also provided is `WrappedMonolog`, which decorates a `Monolog\Logger` and 
-provides a working `withName` implementation.
+Also provided is [`MonologStackLogger`](src/MonologStackLogger.php), which
+decorates a `Monolog\Logger` and provides a working `withName` implementation.
 
 ## Usage
 
 ### Context Stacking
 
 ```php
-use TimDev\StackLogger\Psr3Logger;
+use TimDev\StackLogger\Psr3StackLogger;
 
 // can be anything that implements PSR-3
 $yourLogger = $container->get(\Psr\Log\LoggerInterface::class);
 
 // Decorate it 
-$mainLogger = new Psr3Logger($yourLogger);
+$mainLogger = new Psr3StackLogger($yourLogger);
 
 // it works like a regular PSR-3 logger.
 $mainLogger->info("Hello, World.");
@@ -53,7 +53,7 @@ successive calls.
 /**
  * Imagine this is a long method that logs a bunch of stuff.
  */
-function complexProcessing(User $user, \TimDev\StackLogger\LoggerInterface $logger){
+function complexProcessing(User $user, \TimDev\StackLogger\StackLogger $logger){
     $logger = $logger->child(['user-id' => $user->id]);
     $logger->info("Begin processing");
     // => [2020-10-17 17:40:53] app.INFO: Begin processing. { "user-id": 123 }
@@ -101,8 +101,7 @@ call, even if the underlying logger is configured to ignore the log-level.
 
 ## To Do
 
-- [ ] Make WrappedMonolog implement Monolog's ResettableInterface?
-- [ ] Think of a better name than `StackLogger` 
+- [ ] Make MonologStackLogger implement Monolog's ResettableInterface? 
 - [ ] Consider how this might play with Laravel, the insanely popular PHP 
       framework that I do my best to avoid. 😜
 

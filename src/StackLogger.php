@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger;
 
-interface LoggerInterface extends \Psr\Log\LoggerInterface
+use Psr\Log\LoggerInterface;
+
+interface StackLogger extends LoggerInterface
 {
     /**
      * Returns a new instance that has $context merged on top of any existing

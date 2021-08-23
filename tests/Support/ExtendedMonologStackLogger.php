@@ -6,14 +6,14 @@ namespace TimDev\StackLogger\Test\Support;
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger as MonologLogger;
-use TimDev\StackLogger\Monolog;
+use TimDev\StackLogger\MonologStackLogger;
 
 /**
  * TestLoggerInterface implementation that extends WrappedMonolog.
  *
  * @psalm-type MonologRecord = array{message:string, context:array, channel:string}
  */
-class ExtendedMonolog extends Monolog implements TestLoggerInterface
+class ExtendedMonologStackLogger extends MonologStackLogger implements TestStackLogger
 {
     use TestLoggerTrait;
 

@@ -10,7 +10,7 @@ namespace TimDev\StackLogger\Test\Support;
  * Test subjects buffer messages somehow, and implement getRecords() to expose
  * the buffered messages to the tests.
  *
- * @psalm-import-type LogRecord from TestLoggerInterface
+ * @psalm-import-type LogRecord from TestStackLogger
  */
 trait TestLoggerTrait
 {

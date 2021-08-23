@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
-use TimDev\StackLogger\Test\Support\ExtendedPsr3Logger;
-use TimDev\StackLogger\Test\Support\TestLoggerInterface;
-use TimDev\StackLogger\Psr3Logger;
+use TimDev\StackLogger\Test\Support\Psr3StackLogger;
+use TimDev\StackLogger\Test\Support\TestStackLogger;
 
 /**
- * Test using a wrapped \Psr\Log\TestLogger.
+ * Test using a wrapped \Psr\Log\TestStackLogger.
  */
 class PsrTestLoggerTest extends BaseTest
 {
-    protected function makeTestSubject(): TestLoggerInterface
+    protected function makeTestSubject(): TestStackLogger
     {
-        return new ExtendedPsr3Logger();
+        return new Psr3StackLogger();
     }
 }

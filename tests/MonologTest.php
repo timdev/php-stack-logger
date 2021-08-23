@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
-use TimDev\StackLogger\Test\Support\ExtendedMonolog;
+use TimDev\StackLogger\Test\Support\ExtendedMonologStackLogger;
 
 /**
  * Test against monolog.
@@ -14,9 +14,9 @@ use TimDev\StackLogger\Test\Support\ExtendedMonolog;
  */
 class MonologTest extends BaseTest
 {
-    protected function makeTestSubject(): ExtendedMonolog
+    protected function makeTestSubject(): ExtendedMonologStackLogger
     {
-        return new ExtendedMonolog();
+        return new ExtendedMonologStackLogger();
     }
 
     public function testWithnameCloning(): void

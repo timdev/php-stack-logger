@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace TimDev\StackLogger\Test;
 
 use PHPUnit\Framework\TestCase;
-use TimDev\StackLogger\LoggerInterface;
-use TimDev\StackLogger\Test\Support\TestLoggerInterface;
+use TimDev\StackLogger\StackLogger;
+use TimDev\StackLogger\Test\Support\TestStackLogger;
 
 /**
  * Base class for testing against various loggers.
@@ -17,9 +17,9 @@ use TimDev\StackLogger\Test\Support\TestLoggerInterface;
  */
 abstract class BaseTest extends TestCase
 {
-    abstract protected function makeTestSubject(): TestLoggerInterface;
+    abstract protected function makeTestSubject(): TestStackLogger;
 
-    private TestLoggerInterface $log;
+    private TestStackLogger $log;
 
     public function setUp(): void
     {
@@ -154,6 +154,6 @@ abstract class BaseTest extends TestCase
     public function testNullLoggerFactory(): void
     {
         $null = $this->log::getNullLogger();
-        $this->assertInstanceOf(LoggerInterface::class, $null);
+        $this->assertInstanceOf(StackLogger::class, $null);
     }
 }
