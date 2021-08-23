@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TimDev\StackLogger\Test;
 
 use PHPUnit\Framework\TestCase;
+use TimDev\StackLogger\LoggerInterface;
 use TimDev\StackLogger\Test\Support\TestLoggerInterface;
 
 /**
@@ -148,5 +149,11 @@ abstract class BaseTest extends TestCase
         $logger->withContext(["count" => fn(array $ctx) => count($ctx)]);
         $logger->error("I come from a long lineage", ['final' => 'I should be the 21st context element']);
         $this->assertCount($numLoggers + 1, $logger->recordAt(0)['context']);
+    }
+
+    public function testNullLoggerFactory(): void
+    {
+        $null = $this->log::getNullLogger();
+        $this->assertInstanceOf(LoggerInterface::class, $null);
     }
 }

@@ -29,8 +29,8 @@ class Monolog extends Psr3Logger
         return $new;
     }
 
-    public static function getNullLogger(): static
+    public static function getNullLogger(): self
     {
-        return new static(new MonologLogger('null', [new NullHandler()]));
+        return new self(new MonologLogger('null', [new NullHandler()]));
     }
 }
