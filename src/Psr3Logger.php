@@ -35,7 +35,7 @@ class Psr3Logger implements LoggerInterface
     }
 
     /** @param L $logger */
-    protected function setWrapped(PsrInterface $logger): void
+    final protected function setWrapped(PsrInterface $logger): void
     {
         $this->logger = $logger;
     }
@@ -77,6 +77,17 @@ class Psr3Logger implements LoggerInterface
 
     protected function mergedContext(): array
     {
+        /*
+         @todo since this code can be called a *ton* in every request, this
+               recursive array_merge approach may be seriously sub-optimal:
+               https://github.com/kalessil/phpinspectionsea/blob/master/docs/performance.md#slow-array-function-used-in-loop
+
+               An easy win: collect ancestor-context arrays and do a single
+               merge at the end.
+               Bigger win: do the merging in withContext(), but I feel like I
+               investigated that once, and there was a reason not to do that.
+
+        */
         $pc = $this->parent
             ? $this->parent->mergedContext()
             : [];
@@ -85,22 +96,14 @@ class Psr3Logger implements LoggerInterface
 
     /* PSR3 Implementation, wrapping our wrapped instance. */
 
-    /**
-     * {@inheritDoc}
-     */
     public function log($level, $message, array $context = []): void
     {
         assert(is_string($level) || is_int($level));
-        // merge passed context on top of accumulated context,
-        // and process callable context elements.
         $context = $this->processContext($context);
-
-        // actually log the message.
         $this->logger->log($level, $message, $context);
     }
 
-
-    public function emergency($message, array $context = [])
+    public function emergency($message, array $context = []): void
     {
         $this->log(LogLevel::EMERGENCY, $message, $context);
     }
