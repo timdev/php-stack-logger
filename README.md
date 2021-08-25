@@ -99,6 +99,25 @@ callables in your stacked context. Context is processed *before* invoking the
 wrapped logger's methods. The callables will be invoked on every logging method
 call, even if the underlying logger is configured to ignore the log-level.
 
+### NullLoggers
+
+All `StackLogger` implementations provide a static `getNullLogger()` method,
+which returns an instance that is configured to discard all log messages. These
+"null loggers" can be handy in tests, or as a default logger in classes that
+can optionally accept a real logger:
+
+```php
+use TimDev\StackLogger\MonologStackLogger;
+
+class SomeService 
+{
+    public function __construct(?MonologStackLogger $logger = null)
+    {
+        $this->logger = $logger ?? MonologStackLogger::getNullLogger();
+    }
+}
+```
+
 ## To Do
 
 - [ ] Make MonologStackLogger implement Monolog's ResettableInterface? 
