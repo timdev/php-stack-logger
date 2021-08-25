@@ -6,6 +6,7 @@ namespace TimDev\StackLogger;
 
 use Monolog\Handler\NullHandler;
 use Monolog\Logger as MonologLogger;
+use Psr\Log\LoggerInterface as PsrInterface;
 
 /**
  * Extends Psr3Logger to provide a monolog-like withName() method.
@@ -29,8 +30,13 @@ class MonologStackLogger extends Psr3StackLogger
         return $new;
     }
 
-    public static function getNullLogger(): self
+    public static function makeNullLogger(): self
     {
         return new self(new MonologLogger('null', [new NullHandler()]));
+    }
+
+    public function getWrapped(): MonologLogger
+    {
+        return parent::getWrapped();
     }
 }

@@ -26,5 +26,5 @@ interface StackLogger extends LoggerInterface
      */
     public function addContext(array $context): static;
 
-    public static function getNullLogger(): self;
+    public static function makeNullLogger(): self;
 }

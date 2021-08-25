@@ -153,7 +153,7 @@ abstract class BaseTest extends TestCase
 
     public function testNullLoggerFactory(): void
     {
-        $null = $this->log::getNullLogger();
+        $null = $this->log::makeNullLogger();
         $this->assertInstanceOf(StackLogger::class, $null);
     }
 }

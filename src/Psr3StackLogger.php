@@ -143,7 +143,7 @@ class Psr3StackLogger implements StackLogger
         $this->log(LogLevel::DEBUG, $message, $context);
     }
 
-    public static function getNullLogger(): self
+    public static function makeNullLogger(): self
     {
         return new self(new \Psr\Log\NullLogger());
     }
