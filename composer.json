@@ -6,7 +6,7 @@
   "authors": [
     {
       "name": "Tim Lieberman",
-      "email": "tim@timdev.com"
+      "email": "dev@timdev.com"
     }
   ],
   "require": {
@@ -29,6 +29,8 @@
       "TimDev\\StackLogger\\Test\\": "tests/"
     }
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "scripts": {
     "cs-check": "phpcs",
     "cs-fix": "phpcbf",
