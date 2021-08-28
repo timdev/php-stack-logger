@@ -1,39 +1,61 @@
 {
-  "name": "timdev/php-stack-logger",
-  "type": "library",
-  "description": "A PSR-3 Logger that can track context.",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Tim Lieberman",
-      "email": "dev@timdev.com"
+    "name": "timdev/php-stack-logger",
+    "type": "library",
+    "description": "A PSR-3 Logger that can track context.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tim Lieberman",
+            "email": "dev@timdev.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "psr/log": "^1.1"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.15",
+        "laminas/laminas-log": "^2.12",
+        "monolog/monolog": "^2.1",
+        "phpunit/phpunit": "^9",
+        "psalm/plugin-phpunit": "^0.16.1",
+        "squizlabs/php_codesniffer": "^3.5",
+        "timdev/devtools": "^0.1.6",
+        "vimeo/psalm": "^4.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "TimDev\\StackLogger\\": "src/",
+            "TimDev\\StackLogger\\Test\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "dev": "@dev:qa",
+        "dev:analyze": "psalm",
+        "dev:coverage": "XDEBUG_MODE=coverage phpunit --coverage-text --colors=always",
+        "dev:coverage:html": "XDEBUG_MODE=coverage phpunit --coverage-html build/coverage && echo '\\nCoverage Report: build/coverage/index.html'",
+        "dev:cs": "phpcs",
+        "dev:cs:fix": "phpcbf",
+        "dev:qa": [
+            "@dev:analyze",
+            "@dev:test",
+            "@dev:cs"
+        ],
+        "dev:test": "phpunit --testdox --color=always",
+        "test": "XDEBUG_MODE=coverage phpunit --coverage-text --colors=always --testdox"
+    },
+    "scripts-descriptions": {
+        "dev": "Shortcut for dev:qa.",
+        "dev:analyze": "Run static analysis with psalm.",
+        "dev:coverage": "Report unit test coverage with output in the terminal.",
+        "dev:coverage:html": "Generate unit test coverage report.",
+        "dev:cs": "Run code style checks.",
+        "dev:cs:fix": "Fix code style violations.",
+        "dev:qa": "Run all quality checks (tests, static analysis, and coding standard).",
+        "dev:test": "Run unit tests."
     }
-  ],
-  "require": {
-    "php": "^8.0",
-    "psr/log": "^1.1"
-  },
-  "require-dev": {
-    "ergebnis/composer-normalize": "^2.15",
-    "laminas/laminas-log": "^2.12",
-    "monolog/monolog": "^2.1",
-    "phpunit/phpunit": "^9",
-    "psalm/plugin-phpunit": "^0.16.1",
-    "squizlabs/php_codesniffer": "^3.5",
-    "timdev/devtools": "dev-main",
-    "vimeo/psalm": "^4.9"
-  },
-  "autoload": {
-    "psr-4": {
-      "TimDev\\StackLogger\\": "src/",
-      "TimDev\\StackLogger\\Test\\": "tests/"
-    }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "scripts": {
-    "cs-check": "phpcs",
-    "cs-fix": "phpcbf",
-    "test": "XDEBUG_MODE=coverage phpunit --coverage-text --colors=always --testdox"
-  }
 }
