@@ -1,36 +1,20 @@
-# Select image from https://hub.docker.com/_/php/
-image: php:8.0-cli
-
-# Select what we should cache
+# We want to cache the vendor dir.
 cache:
+  # this expands to the branch, eg: 'master'
+  key: ${CI_COMMIT_REF_SLUG}
   paths:
   - vendor/
-  - .composer-cache
+
 before_script:
-# Install git, the php image doesn't have installed
-#- apt-get update -yqq
-#- apt-get install git libzip-dev -yqq
-
-# Install any regular extensions
-#- docker-php-ext-install zip
-
-# Install and configure xdebug for code-coverage duty
-#- pecl install xdebug
-#- docker-php-ext-enable xdebug
-#- echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
-
 # Install composer
 - curl -sS https://getcomposer.org/installer | php
-
-# Set composer cache directory
-- php composer.phar config -g cache-dir "$(pwd)/.composer-cache"
 
 # Install all project dependencies
 - php composer.phar install
 
-# To start, we're just testing against 8.0
-# @todo Figure out how to test across a range of versions.
+# This package is PHP8-only.
 test:php8.0:
+  image: php:8.0-cli
   script:
   - php composer.phar dev:qa
 
