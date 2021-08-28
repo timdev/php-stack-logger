@@ -29,5 +29,5 @@ before_script:
 # @todo Figure out how to test across a range of versions.
 test:php8.0:
   script:
-  - vendor/bin/phpunit --coverage-text
+  - composer dev:qa
 
