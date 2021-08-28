@@ -23,7 +23,7 @@ before_script:
 - curl -sS https://getcomposer.org/installer | php
 
 # Set composer cache directory
-- composer config -g cache-dir "$(pwd)/.composer-cache"
+- php composer.phar config -g cache-dir "$(pwd)/.composer-cache"
 
 # Install all project dependencies
 - php composer.phar install
