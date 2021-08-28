@@ -5,7 +5,7 @@ image: php:8.0-cli
 cache:
   paths:
   - vendor/
-
+  - .composer-cache
 before_script:
 # Install git, the php image doesn't have installed
 - apt-get update -yqq
@@ -21,6 +21,9 @@ before_script:
 
 # Install composer
 - curl -sS https://getcomposer.org/installer | php
+
+# Set composer cache directory
+- composer config -g cache-dir "$(pwd)/.composer-cache"
 
 # Install all project dependencies
 - php composer.phar install
