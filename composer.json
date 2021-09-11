@@ -2,6 +2,7 @@
     "name": "timdev/php-stack-logger",
     "type": "library",
     "description": "A PSR-3 Logger that can track context.",
+    "keywords": ["psr3", "logging", "logger", "context", "monolog"],
     "license": "MIT",
     "authors": [
         {
