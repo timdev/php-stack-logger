@@ -1,9 +1,15 @@
 {
     "name": "timdev/stack-logger",
-    "type": "library",
     "description": "A PSR-3 Logger that can track context.",
-    "keywords": ["psr3", "logging", "logger", "context", "monolog"],
     "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "psr3",
+        "logging",
+        "logger",
+        "context",
+        "monolog"
+    ],
     "authors": [
         {
             "name": "Tim Lieberman",
@@ -24,14 +30,14 @@
         "timdev/devtools": "^0.1.6",
         "vimeo/psalm": "^4.9"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "TimDev\\StackLogger\\": "src/",
             "TimDev\\StackLogger\\Test\\": "tests/"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "scripts": {
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
