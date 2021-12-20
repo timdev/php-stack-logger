@@ -1,8 +1,7 @@
 {
     "name": "timdev/stack-logger",
-    "description": "A PSR-3 Logger that can track context.",
-    "license": "MIT",
     "type": "library",
+    "description": "A PSR-3 Logger that can track context.",
     "keywords": [
         "psr3",
         "logging",
@@ -10,6 +9,7 @@
         "context",
         "monolog"
     ],
+    "license": "MIT",
     "authors": [
         {
             "name": "Tim Lieberman",
@@ -23,21 +23,24 @@
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",
         "laminas/laminas-log": "^2.12",
-        "monolog/monolog": "^2.1",
-        "phpunit/phpunit": "^9",
+        "laminas/laminas-stdlib": "^3.6.2",
+        "monolog/monolog": "^2.3",
+        "phpunit/phpunit": "^9.5.10",
         "psalm/plugin-phpunit": "^0.16.1",
-        "squizlabs/php_codesniffer": "^3.5",
-        "timdev/devtools": "^0.1.6",
+        "squizlabs/php_codesniffer": "^3.6.2",
+        "symfony/console": "^4.4.30",
+        "symfony/process": "^4.4.30",
+        "timdev/devtools": "^0.1.8",
         "vimeo/psalm": "^4.9"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "TimDev\\StackLogger\\": "src/",
             "TimDev\\StackLogger\\Test\\": "tests/"
         }
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "scripts": {
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
