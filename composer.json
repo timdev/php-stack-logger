@@ -1,7 +1,8 @@
 {
     "name": "timdev/stack-logger",
-    "type": "library",
     "description": "A PSR-3 Logger that can track context.",
+    "license": "MIT",
+    "type": "library",
     "keywords": [
         "psr3",
         "logging",
@@ -9,7 +10,6 @@
         "context",
         "monolog"
     ],
-    "license": "MIT",
     "authors": [
         {
             "name": "Tim Lieberman",
@@ -17,7 +17,7 @@
         }
     ],
     "require": {
-        "php": "~8.0.0 || ~8.1.0",
+        "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
         "psr/log": "^1.1"
     },
     "require-dev": {
@@ -30,17 +30,22 @@
         "squizlabs/php_codesniffer": "^3.6.2",
         "symfony/console": "^4.4.30",
         "symfony/process": "^4.4.30",
-        "timdev/devtools": "^0.1.8",
+        "timdev/devtools": "^0.1.9",
         "vimeo/psalm": "^4.9"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "TimDev\\StackLogger\\": "src/",
             "TimDev\\StackLogger\\Test\\": "tests/"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        }
+    },
     "scripts": {
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
