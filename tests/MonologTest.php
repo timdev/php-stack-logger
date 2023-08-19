@@ -92,8 +92,7 @@ class MonologTest extends BaseTest
 
         $first->debug('First now has one record with two context');
         $this->assertCount(1, $first->getChannelRecords());
-        $this->assertCount(2, $first->getChannelRecords()[0]['context']);
-
+        $this->assertCount(2, $first->channelRecordAt(0)['context']);
         $this->assertEquals(2, $first->contextCountAt(0));
     }
 }

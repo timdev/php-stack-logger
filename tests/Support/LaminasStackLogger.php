@@ -7,6 +7,7 @@ namespace TimDev\StackLogger\Test\Support;
 use Laminas\Log\Logger;
 use Laminas\Log\PsrLoggerAdapter;
 use Laminas\Log\Writer\Mock;
+use Psr\Log\LoggerInterface;
 use TimDev\StackLogger\Psr3StackLogger;
 
 /**
@@ -14,6 +15,7 @@ use TimDev\StackLogger\Psr3StackLogger;
  * PsrLoggerAdapter decorates \Laminas\Log\Logger to make it PSR3 compatible.
  *
  * @psalm-import-type LogRecord from TestStackLogger
+ * @extends Psr3StackLogger<LoggerInterface>
  */
 class LaminasStackLogger extends Psr3StackLogger implements TestStackLogger
 {

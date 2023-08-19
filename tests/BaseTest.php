@@ -38,17 +38,21 @@ abstract class BaseTest extends TestCase
 
     public function testAddsContext(): void
     {
-        $this->log->addContext(['some' => 'context']);
-        $this->log->info('An info.');
+        $this->log->addContext(['some' => 'context'])->info('An info.');
         $this->assertEquals(['some'], $this->log->contextKeysAt(0));
 
-        $this->log->addContext(['more' => 'context']);
-        $this->log->info('I should have two bits of context.');
+        $this->log
+            ->addContext(['more' => 'context'])
+            ->info('I should have two bits of context.');
         $this->assertEquals(2, $this->log->contextCountAt(1));
         $this->assertEquals(['some', 'more'], $this->log->contextKeysAt(1));
 
-        $this->log->addContext(['even more' => 'context']);
-        $this->log->warning('This message should get four context elements.', ['foo' => 'bar']);
+        $this->log
+            ->addContext(['even more' => 'context'])
+            ->warning(
+                'This message should get four context elements.',
+                ['foo' => 'bar']
+            );
         $this->assertEquals(4, $this->log->contextCountAt(2));
 
         $this->log->debug('Back to three!');
