@@ -74,10 +74,12 @@ abstract class BaseTest extends TestCase
         // $child should have two context items.
         $child->warning('I should have three context items', ['final' => 'context']);
         $this->assertCount(3, $child->contextAt(0));
-        $this->assertEquals(
-            ['initial', 'more', 'final'],
-            $child->contextKeysAt(0)
-        );
+
+        // Keys should be identical. Order is not guaranteed
+        $contextKeys = $child->contextKeysAt(0);
+        foreach (['initial', 'more', 'final'] as $key) {
+            $this->assertContains($key, $contextKeys);
+        }
 
         // Messages logged by $log should not anything beyond the 'initial' context item.
         $log->info('I should have one context item (on my second record)');

@@ -20,6 +20,7 @@ class Psr3StackLogger implements StackLogger
     /** @psalm-var static  */
     protected ?StackLogger $parent = null;
 
+    /** @var array<string, mixed> */
     protected array $context = [];
 
     /** @param L $logger */
@@ -43,7 +44,7 @@ class Psr3StackLogger implements StackLogger
     /**
      * Context Handling
      *
-     * @param array $context
+     * @param array<string, mixed> $context
      * @return static<L>
      */
     public function withContext(array $context = []): static
@@ -54,6 +55,10 @@ class Psr3StackLogger implements StackLogger
         return $child;
     }
 
+    /**
+     * @param array<string, mixed> $context
+     * @return $this
+     */
     public function addContext(array $context): static
     {
         $this->context = array_merge($this->context, $context);
@@ -75,23 +80,21 @@ class Psr3StackLogger implements StackLogger
         );
     }
 
+    /**
+     * Returns an array like [grandparentContext, parentContext, myContext]
+     * @return list<array>
+     */
+    protected function contextToMerge(): array
+    {
+        return [
+            ... $this->parent ? $this->parent->contextToMerge() : [],
+            $this->context
+        ];
+    }
+
     protected function mergedContext(): array
     {
-        /*
-         @todo since this code can be called a *ton* in every request, this
-               recursive array_merge approach may be seriously sub-optimal:
-               https://github.com/kalessil/phpinspectionsea/blob/master/docs/performance.md#slow-array-function-used-in-loop
-
-               An easy win: collect ancestor-context arrays and do a single
-               merge at the end.
-               Bigger win: do the merging in withContext(), but I feel like I
-               investigated that once, and there was a reason not to do that.
-
-        */
-        $pc = $this->parent
-            ? $this->parent->mergedContext()
-            : [];
-        return array_merge($pc, $this->context);
+        return array_merge(...$this->contextToMerge());
     }
 
     /* PSR3 Implementation, wrapping our wrapped instance. */
