@@ -6,12 +6,12 @@ namespace TimDev\StackLogger\Test\Support;
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger as MonologLogger;
+use Monolog\LogRecord as MonologRecord;
 use TimDev\StackLogger\MonologStackLogger as BaseMonologStackLogger;
 
 /**
  * TestLoggerInterface implementation that extends WrappedMonolog.
  *
- * @psalm-type MonologRecord = array{message:string, context:array, channel:string, ...}
  */
 class MonologStackLogger extends BaseMonologStackLogger implements TestStackLogger
 {
@@ -42,23 +42,19 @@ class MonologStackLogger extends BaseMonologStackLogger implements TestStackLogg
      * loggers inherit handlers from their parent, but it's useful in some tests
      * to inspect log messages written by a particular instance.
      *
-     * @return array<int,MonologRecord>
+     * @return list<MonologRecord>
      */
     public function getChannelRecords(): array
     {
         return array_values(
             array_filter(
                 $this->getRecords(),
-                fn(array $rec) => $rec['channel'] === $this->getWrapped()->getName()
+                fn(MonologRecord $rec) => $rec['channel'] === $this->getWrapped()->getName()
             )
         );
     }
 
-    /**
-     * @param int $index
-     * @return MonologRecord
-     */
-    public function channelRecordAt(int $index): array
+    public function channelRecordAt(int $index): MonologRecord
     {
         return $this->getChannelRecords()[$index] ?? throw new \OutOfBoundsException("No record at index {$index}");
     }

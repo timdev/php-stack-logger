@@ -15,7 +15,7 @@ use TimDev\StackLogger\Test\Support\TestStackLogger;
  * implementations. Actual test classes extend this and implement
  * makeTestSubject().
  */
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     abstract protected function makeTestSubject(): TestStackLogger;
 

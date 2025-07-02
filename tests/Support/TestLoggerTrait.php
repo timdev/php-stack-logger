@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test\Support;
 
+use Monolog\LogRecord as MonologLogRecord;
+
 /**
  * A trait that implements most of TestLoggerInterface.
  *
@@ -14,8 +16,8 @@ namespace TimDev\StackLogger\Test\Support;
  */
 trait TestLoggerTrait
 {
-    /** @return LogRecord */
-    public function recordAt(int $index): array
+    /** @return LogRecord|MonologLogRecord */
+    public function recordAt(int $index): array|MonologLogRecord
     {
         $records = $this->getRecords();
         if (!array_key_exists($index, $records)) {

@@ -2,6 +2,7 @@
 
 namespace TimDev\StackLogger\Test\Support;
 
+use Monolog\LogRecord as MonologLogRecord;
 use OutOfBoundsException;
 use TimDev\StackLogger\StackLogger;
 
@@ -11,7 +12,7 @@ use TimDev\StackLogger\StackLogger;
  * TestLoggerTrait to get most of this. You may need to override a method or
  * two, as we do in ExtendedWrappedMonolog.
  *
- * @psalm-type LogRecord = array{message:string, context:array, channel:string, ...}
+ * @psalm-type LogRecord = array{message:string, context:array, channel:string, ...}|MonologLogRecord
  */
 interface TestStackLogger extends StackLogger
 {
@@ -45,7 +46,7 @@ interface TestStackLogger extends StackLogger
      * @throws OutofBoundsException
      * @return LogRecord
      */
-    public function recordAt(int $index): array;
+    public function recordAt(int $index): array|MonologLogRecord;
 
     /* Methods for inspecting the context tracked by the instance */
 

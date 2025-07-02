@@ -12,7 +12,7 @@ use TimDev\StackLogger\Test\Support\MonologStackLogger;
  * WrappedMonolog supports monolog's withName() method, so we have some extra
  * cases here to test that support.
  */
-class MonologTest extends BaseTest
+class MonologTest extends BaseTestCase
 {
     protected function makeTestSubject(): MonologStackLogger
     {

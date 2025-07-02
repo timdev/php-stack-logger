@@ -30,11 +30,13 @@ class MonologStackLogger extends Psr3StackLogger
         return $new;
     }
 
+    #[\Override]
     public static function makeNullLogger(): self
     {
         return new self(new MonologLogger('null', [new NullHandler()]));
     }
 
+    #[\Override]
     public function getWrapped(): MonologLogger
     {
         return parent::getWrapped();
