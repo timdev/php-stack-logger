@@ -4,8 +4,8 @@ Wrap your PSR-3 logger with context accumulation and callable context elements.
 
 ## Inspiration
 
-Inspired by the [similar functionality] in [pinojs]. Design and implementation 
-details differ, but the core idea remains: 
+Inspired by the [similar functionality] in [pinojs]. Design and implementation
+details differ, but the core idea remains:
 
 ## Approach
 
@@ -15,7 +15,7 @@ additional `withContext` and `addContext` methods defined in this library's
 [StackLogger interface](src/StackLogger.php).
 
 Also provided is [`MonologStackLogger`](src/MonologStackLogger.php), which
-decorates a `Monolog\Logger` and provides a working `withName` implementation.
+decorates a `Monolog\Logger` and provides a working [`withName`] implementation.
 
 ## Usage
 
@@ -46,7 +46,7 @@ $mainLogger->info("Still here, with no accumulated context!");
 // => [2020-10-17 17:40:53] app.INFO: Still here, with no accumulated context!
 ```
 
-This can be useful in any situation where want to carry some context through 
+This can be useful in any situation where want to carry some context through
 successive calls.
 
 ```php
@@ -78,9 +78,9 @@ function complexProcessing(User $user, \TimDev\StackLogger\StackLogger $logger){
 
 ### Dynamic (Callable) Context
 
-The other feature provided here is callable context. Any context elements that 
-are `callable` will be invoked at logging-time, and the result of the 
-computation will be logged. Callables take a single array argument: 
+The other feature provided here is callable context. Any context elements that
+are `callable` will be invoked at logging-time, and the result of the
+computation will be logged. Callables take a single array argument:
 `function(array $context): mixed`
 
 ```php
@@ -120,15 +120,11 @@ class SomeService
 
 ## To Do
 
-- [ ] Make MonologStackLogger implement Monolog's ResettableInterface? 
-- [ ] Consider how this might play with Laravel, the insanely popular PHP 
+- [ ] Make MonologStackLogger implement Monolog's ResettableInterface?
+- [ ] Consider how this might play with Laravel, the insanely popular PHP
       framework that I do my best to avoid. 😜
-
-      
 
 [similar functionality]: https://getpino.io/#/docs/child-loggers
 [pinojs]: https://github.com/pinojs/pino
 [PSR3 LoggerInterface]: https://www.php-fig.org/psr/psr-3/
-[monolog]: https://github.com/Seldaek/monolog
-[addRecord]: https://github.com/Seldaek/monolog/blob/a54cd1f1782f62714e4d28651224316bb5540e08/src/Monolog/Logger.php#L278-L336
-[withName]: https://github.com/Seldaek/monolog/blob/a54cd1f1782f62714e4d28651224316bb5540e08/src/Monolog/Logger.php#L163-L172
+[`withName`]: https://github.com/Seldaek/monolog/blob/a54cd1f1782f62714e4d28651224316bb5540e08/src/Monolog/Logger.php#L163-L172
