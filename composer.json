@@ -28,7 +28,9 @@
         "fig/log-test": "^1.1",
         "phpstan/phpstan": "^2.1",
         "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan-strict-rules": "^2.0"
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "symplify/easy-coding-standard": "^12.5",
+        "roave/security-advisories": "dev-latest"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -48,7 +50,7 @@
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "dev": "@dev:qa",
-        "dev:analyze": "psalm",
+        "dev:analyze": "phpstan",
         "dev:coverage": "XDEBUG_MODE=coverage phpunit --coverage-text --colors=always",
         "dev:coverage:html": "XDEBUG_MODE=coverage phpunit --coverage-html build/coverage && echo '\\nCoverage Report: build/coverage/index.html'",
         "dev:cs": "phpcs",
