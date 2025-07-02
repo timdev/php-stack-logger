@@ -7,6 +7,7 @@ namespace TimDev\StackLogger;
 use Psr\Log\LoggerInterface as PsrInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\NullLogger;
+use function PHPStan\dumpType;
 
 /**
  * Implements LoggerInterface by wrapping a PSR3 logger.
@@ -95,7 +96,7 @@ class Psr3StackLogger implements StackLogger
     protected function contextToMerge(): array
     {
         return [
-            ... $this->parent ? $this->parent->contextToMerge() : [],
+            ... ($this->parent !== null)  ? $this->parent->contextToMerge() : [],
             $this->context
         ];
     }
@@ -115,12 +116,9 @@ class Psr3StackLogger implements StackLogger
         $context = $this->processContext($context);
         $this->logger->log($level, $message, $context);
     }
-
-    /**
-     * @return Psr3StackLogger<NullLogger>
-     */
-    public static function makeNullLogger(): self
+    public static function makeNullLogger(): StackLogger
     {
-        return new self(new NullLogger());
+        $instance = new NullLogger();
+        return new self($instance);
     }
 }
