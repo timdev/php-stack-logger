@@ -1,9 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test\Support;
 
 use Monolog\LogRecord as MonologLogRecord;
-use OutOfBoundsException;
 use TimDev\StackLogger\StackLogger;
 
 /**
@@ -47,7 +46,6 @@ interface TestStackLogger extends StackLogger
      * Returns the record at a specific index. Throws if no record
      * exists at that index.
      *
-     * @throws OutofBoundsException
      * @return LogRecord
      */
     public function recordAt(int $index): array|MonologLogRecord;

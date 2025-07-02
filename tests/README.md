@@ -10,13 +10,6 @@ class.
 that is configured with a `TestHandler` buffers messages similarly to the PSR3 
 `TestLogger`.
 
-`LaminasTest` is similar, but it uses a Laminas logger (configured with a 
-`Laminas\Log\Writer\Mock` to buffer messages), which is wrapped in a Laminas
-PsrLoggerAdapter, which decorates the core logger and implements PSR3, which is
-then wrapped by us to provide our functionality. These tests shouldn't be 
-necessary, since it's "just" a PSR-3 logger, but it's nice to validate that our
-code works against something other than the `TestLogger` provided by `psr/log`.
-
 The Support/ directory contains test subject classes that extend our 
 implementation classes and provide helper methods to inspect the buffered 
 messages/records so we can assert stuff about them.

@@ -123,10 +123,6 @@ class SomeService
 - [ ] Make MonologStackLogger implement Monolog's ResettableInterface? 
 - [ ] Consider how this might play with Laravel, the insanely popular PHP 
       framework that I do my best to avoid. 😜
-- [ ] Track what's going on with PSR-3 v2/v3 as well as monolog and 
-      laminas-log. Eventually, we should rely on the updated + better-typed  
-      versions of the spec. We may need to drop the laminas-log test code since
-      laminas-log will likely always require psr/log@1.1.x
 
       
 

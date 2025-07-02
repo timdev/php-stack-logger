@@ -1,10 +1,7 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
-use TimDev\StackLogger\StackLogger;
 use TimDev\StackLogger\Test\Support\MonologStackLogger;
 
 /**
@@ -15,15 +12,11 @@ use TimDev\StackLogger\Test\Support\MonologStackLogger;
  */
 class MonologTest extends BaseTestCase
 {
-    protected function makeTestSubject(): MonologStackLogger
-    {
-        return new MonologStackLogger();
-    }
-
     public function testWithnameCloning(): void
     {
         // push some context.
-        $log = $this->makeTestSubject()->withContext(['basic' => 'context']);
+        $log = $this->makeTestSubject()
+            ->withContext(['basic' => 'context']);
 
         // get a clone with a new monolog channel-name, and log to it.
         $newChannel = $log->withName('other');
@@ -50,7 +43,8 @@ class MonologTest extends BaseTestCase
 
     public function testWithnameClonesTrackParentContext(): void
     {
-        $original = $this->makeTestSubject()->withContext(['original' => 'context']);
+        $original = $this->makeTestSubject()
+            ->withContext(['original' => 'context']);
 
         // withName()'d clone includes parent's context.
         $renamed = $original->withName('new');
@@ -74,7 +68,8 @@ class MonologTest extends BaseTestCase
          of a general sanity-check.
         */
 
-        $first = $this->makeTestSubject()->withName('first');
+        $first = $this->makeTestSubject()
+            ->withName('first');
         $second = $first->withName('second');
         $second = $second->withContext(['second' => 'context']);
 
@@ -103,5 +98,10 @@ class MonologTest extends BaseTestCase
     {
         $null = MonologStackLogger::makeNullLogger();
         self::assertInstanceOf(\TimDev\StackLogger\MonologStackLogger::class, $null);
+    }
+
+    protected function makeTestSubject(): MonologStackLogger
+    {
+        return new MonologStackLogger();
     }
 }

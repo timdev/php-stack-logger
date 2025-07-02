@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
@@ -12,14 +10,14 @@ use TimDev\StackLogger\Test\Support\TestStackLogger;
  */
 class Psr3Test extends BaseTestCase
 {
-    protected function makeTestSubject(): TestStackLogger
-    {
-        return new Psr3StackLogger();
-    }
-
     public function testNullLoggerFactory(): void
     {
         $null = \TimDev\StackLogger\Psr3StackLogger::makeNullLogger();
         self::assertInstanceOf(\TimDev\StackLogger\Psr3StackLogger::class, $null);
+    }
+
+    protected function makeTestSubject(): TestStackLogger
+    {
+        return new Psr3StackLogger();
     }
 }

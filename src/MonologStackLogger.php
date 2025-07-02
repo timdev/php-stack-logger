@@ -1,12 +1,9 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace TimDev\StackLogger;
 
 use Monolog\Handler\NullHandler;
 use Monolog\Logger as MonologLogger;
-use Psr\Log\LoggerInterface as PsrInterface;
 
 /**
  * Extends Psr3Logger to provide a monolog-like withName() method.
@@ -24,7 +21,7 @@ class MonologStackLogger extends Psr3StackLogger
     {
         // this works, but requires WrappedPSR3::$logger to be non-private.
         // Is there a better way?
-        $new = clone $this;
+        $new         = clone $this;
         $new->logger = $this->logger->withName($name);
         $new->parent = $this;
         return $new;

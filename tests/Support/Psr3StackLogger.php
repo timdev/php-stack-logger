@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test\Support;
 
@@ -26,10 +24,7 @@ class Psr3StackLogger extends BasePsr3StackLogger implements TestStackLogger
         parent::__construct(new TestLogger());
     }
 
-
-    /**
-     * @return array<LogRecord>
-     */
+    /** @return array<LogRecord> */
     #[\Override]
     public function getRecords(): array
     {

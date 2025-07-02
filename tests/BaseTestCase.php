@@ -1,11 +1,8 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
 use PHPUnit\Framework\TestCase;
-use TimDev\StackLogger\StackLogger;
 use TimDev\StackLogger\Test\Support\TestStackLogger;
 
 /**
@@ -17,12 +14,10 @@ use TimDev\StackLogger\Test\Support\TestStackLogger;
  */
 abstract class BaseTestCase extends TestCase
 {
-    abstract protected function makeTestSubject(): TestStackLogger;
-
     private TestStackLogger $log;
 
     #[\Override]
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->log = $this->makeTestSubject();
     }
@@ -50,10 +45,7 @@ abstract class BaseTestCase extends TestCase
 
         $this->log
             ->addContext(['even more' => 'context'])
-            ->warning(
-                'This message should get four context elements.',
-                ['foo' => 'bar']
-            );
+            ->warning('This message should get four context elements.', ['foo' => 'bar']);
         self::assertEquals(4, $this->log->contextCountAt(2));
 
         $this->log->debug('Back to three!');
@@ -70,7 +62,7 @@ abstract class BaseTestCase extends TestCase
 
     public function testAccumulatesContext(): void
     {
-        $log = $this->log->withContext(['initial' => 'context']);
+        $log   = $this->log->withContext(['initial' => 'context']);
         $child = $log->withContext(['more' => 'context']);
 
         // $child should have two context items.
@@ -87,10 +79,7 @@ abstract class BaseTestCase extends TestCase
         $log->info('I should have one context item (on my second record)');
 
         self::assertCount(1, $log->contextAt(1));
-        self::assertEquals(
-            ['initial'],
-            $log->contextKeysAt(1)
-        );
+        self::assertEquals(['initial'], $log->contextKeysAt(1));
     }
 
     public function testMergesContext(): void
@@ -101,30 +90,24 @@ abstract class BaseTestCase extends TestCase
         $log
             ->withContext(['a' => 'Allison', 'b' => 'Bob'])
             ->emergency('Allison and Bruno', ['b' => 'Bruno']);
-        self::assertEquals(
-            ['Allison', 'Bruno'],
-            $this->log->contextValuesAt(0)
-        );
+        self::assertEquals(['Allison', 'Bruno'], $this->log->contextValuesAt(0));
 
         // But original logger should still have (only) Alice.
         $log->critical('Alice alone.');
-        self::assertEquals(
-            ['a' => 'Alice'],
-            $this->log->contextAt(1)
-        );
+        self::assertEquals(['a' => 'Alice'], $this->log->contextAt(1));
     }
 
     public function testInvokesCallables(): void
     {
         $logger = $this->log;
-        $child = $logger->withContext(
+        $child  = $logger->withContext(
             [
                 // A callable context element that returns the number of
                 // elements in the record's context.
                 'counter' => function (array $ctx) {
                     return count($ctx);
-                }
-            ]
+                },
+            ],
         );
         $child->notice('Only one context element, the result of the callable.');
         self::assertEquals(1, $child->contextAt(0)['counter']);
@@ -133,10 +116,10 @@ abstract class BaseTestCase extends TestCase
         $child->warning('A log with three context items.', ['Third' => 'Context Item']);
         self::assertEquals(
             $child->contextCountAt(1),          // === 3
-            $child->contextAt(1)['counter']
+            $child->contextAt(1)['counter'],
         );
 
-        $start = microtime(true);
+        $start  = microtime(true);
         $child2 = $logger->withContext(['elapsed_micros' => fn() => 1000000 * (microtime(true) - $start)]);
         usleep(1000);
         $child2->alert('At least 1000 μ-sec have passed.');
@@ -149,15 +132,16 @@ abstract class BaseTestCase extends TestCase
      */
     public function testLongChain(): void
     {
-        $logger = $this->log;
+        $logger     = $this->log;
         $numLoggers = 20;
         foreach (range(1, $numLoggers) as $i) {
             $logger = $logger->withContext(["gen{$i}" => $i]);
         }
-        $logger->withContext(["count" => fn(array $ctx) => count($ctx)]);
-        $logger->error("I come from a long lineage", ['final' => 'I should be the 21st context element']);
+        $logger->withContext(['count' => fn(array $ctx) => count($ctx)]);
+        $logger->error('I come from a long lineage', ['final' => 'I should be the 21st context element']);
         self::assertIsIterable($logger->recordAt(0)['context']);
         self::assertCount($numLoggers + 1, $logger->recordAt(0)['context']);
     }
 
+    abstract protected function makeTestSubject(): TestStackLogger;
 }

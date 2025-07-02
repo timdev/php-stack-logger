@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test\Support;
 
@@ -8,11 +6,9 @@ use Monolog\Handler\TestHandler;
 use Monolog\Logger as MonologLogger;
 use Monolog\LogRecord as MonologRecord;
 use TimDev\StackLogger\MonologStackLogger as BaseMonologStackLogger;
-use TimDev\StackLogger\StackLogger;
 
 /**
  * TestLoggerInterface implementation that extends WrappedMonolog.
- *
  */
 class MonologStackLogger extends BaseMonologStackLogger implements TestStackLogger
 {
@@ -28,7 +24,7 @@ class MonologStackLogger extends BaseMonologStackLogger implements TestStackLogg
     {
         $this->handler = new TestHandler();
         parent::__construct(
-            new MonologLogger('test', [$this->handler])
+            new MonologLogger('test', [$this->handler]),
         );
     }
 
@@ -50,8 +46,8 @@ class MonologStackLogger extends BaseMonologStackLogger implements TestStackLogg
         return array_values(
             array_filter(
                 $this->getRecords(),
-                fn(MonologRecord $rec) => $rec['channel'] === $this->getWrapped()->getName()
-            )
+                fn(MonologRecord $rec) => $rec['channel'] === $this->getWrapped()->getName(),
+            ),
         );
     }
 
