@@ -21,6 +21,7 @@ abstract class BaseTestCase extends TestCase
 
     private TestStackLogger $log;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->log = $this->makeTestSubject();
@@ -63,7 +64,8 @@ abstract class BaseTestCase extends TestCase
     {
         $log = $this->log->withContext(['initial' => 'context']);
         $log->debug('I should have some context from my constructor arg');
-        $this->assertEquals('context', $log->recordAt(0)['context']['initial']);
+        $this->assertIsArray($log->recordAt(0)['context']);
+        $this->assertEquals('context', $log->recordAt(0)['context']['initial'] ?? false);
     }
 
     public function testAccumulatesContext(): void
@@ -154,12 +156,8 @@ abstract class BaseTestCase extends TestCase
         }
         $logger->withContext(["count" => fn(array $ctx) => count($ctx)]);
         $logger->error("I come from a long lineage", ['final' => 'I should be the 21st context element']);
+        $this->assertIsIterable($logger->recordAt(0)['context']);
         $this->assertCount($numLoggers + 1, $logger->recordAt(0)['context']);
     }
 
-    public function testNullLoggerFactory(): void
-    {
-        $null = $this->log::makeNullLogger();
-        $this->assertInstanceOf(StackLogger::class, $null);
-    }
 }

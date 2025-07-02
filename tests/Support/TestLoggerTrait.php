@@ -12,11 +12,11 @@ use Monolog\LogRecord as MonologLogRecord;
  * Test subjects buffer messages somehow, and implement getRecords() to expose
  * the buffered messages to the tests.
  *
- * @psalm-import-type LogRecord from TestStackLogger
+ * @phpstan-import-type LogRecord from TestStackLogger
  */
 trait TestLoggerTrait
 {
-    /** @return LogRecord|MonologLogRecord */
+    /** @return LogRecord */
     public function recordAt(int $index): array|MonologLogRecord
     {
         $records = $this->getRecords();
@@ -26,6 +26,7 @@ trait TestLoggerTrait
         return $records[$index];
     }
 
+    /** @return mixed[] */
     public function contextAt(int $recordIndex): array
     {
         $record = $this->recordAt($recordIndex);

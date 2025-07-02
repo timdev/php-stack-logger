@@ -13,7 +13,7 @@ use TimDev\StackLogger\Psr3StackLogger as BasePsr3StackLogger;
  * as the underlying logger. This is just about as simple as we can get for
  * testing.
  *
- * @psalm-import-type LogRecord from TestStackLogger
+ * @phpstan-import-type LogRecord from TestStackLogger
  * @extends BasePsr3StackLogger<LoggerInterface>
  */
 class Psr3StackLogger extends BasePsr3StackLogger implements TestStackLogger
@@ -26,7 +26,11 @@ class Psr3StackLogger extends BasePsr3StackLogger implements TestStackLogger
         parent::__construct(new TestLogger());
     }
 
-    /** return array<LogRecord> */
+
+    /**
+     * @return array<LogRecord>
+     */
+    #[\Override]
     public function getRecords(): array
     {
         /** @var TestLogger $wrapped */

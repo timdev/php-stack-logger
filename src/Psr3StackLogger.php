@@ -5,22 +5,25 @@ declare(strict_types=1);
 namespace TimDev\StackLogger;
 
 use Psr\Log\LoggerInterface as PsrInterface;
-use Psr\Log\LogLevel;
+use Psr\Log\LoggerTrait;
+use Psr\Log\NullLogger;
 
 /**
  * Implements LoggerInterface by wrapping a PSR3 logger.
  *
- * @template L of PsrInterface
+ * @phpstan-template L of PsrInterface
  */
 class Psr3StackLogger implements StackLogger
 {
+    use LoggerTrait;
+
     /** @var L */
     protected PsrInterface $logger;
 
-    /** @psalm-var static  */
+    /** @var static  */
     protected ?StackLogger $parent = null;
 
-    /** @var array<string, mixed> */
+    /** @var array<mixed> */
     protected array $context = [];
 
     /** @param L $logger */
@@ -45,8 +48,9 @@ class Psr3StackLogger implements StackLogger
      * Context Handling
      *
      * @param array<string, mixed> $context
-     * @return static<L>
+     * @return static
      */
+    #[\Override]
     public function withContext(array $context = []): static
     {
         $child = clone $this;
@@ -59,6 +63,7 @@ class Psr3StackLogger implements StackLogger
      * @param array<string, mixed> $context
      * @return $this
      */
+    #[\Override]
     public function addContext(array $context): static
     {
         $this->context = array_merge($this->context, $context);
@@ -68,6 +73,9 @@ class Psr3StackLogger implements StackLogger
     /**
      * Merges $context on top of the instances accumulated context, and
      * processes any callable elements in the final context.
+     *
+     * @param array<mixed> $context
+     * @return array<mixed>
      */
     protected function processContext(array $context = []): array
     {
@@ -92,6 +100,7 @@ class Psr3StackLogger implements StackLogger
         ];
     }
 
+    /** @return array<mixed> */
     protected function mergedContext(): array
     {
         return array_merge(...$this->contextToMerge());
@@ -99,55 +108,19 @@ class Psr3StackLogger implements StackLogger
 
     /* PSR3 Implementation, wrapping our wrapped instance. */
 
-    public function log($level, $message, array $context = []): void
+    #[\Override]
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         assert(is_string($level) || is_int($level));
         $context = $this->processContext($context);
         $this->logger->log($level, $message, $context);
     }
 
-    public function emergency($message, array $context = []): void
-    {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
-    }
-
-    public function alert($message, array $context = []): void
-    {
-        $this->log(LogLevel::ALERT, $message, $context);
-    }
-
-    public function critical($message, array $context = []): void
-    {
-        $this->log(LogLevel::CRITICAL, $message, $context);
-    }
-
-    public function error($message, array $context = []): void
-    {
-        $this->log(LogLevel::ERROR, $message, $context);
-    }
-
-    public function warning($message, array $context = []): void
-    {
-        $this->log(LogLevel::WARNING, $message, $context);
-    }
-
-    public function notice($message, array $context = []): void
-    {
-        $this->log(LogLevel::NOTICE, $message, $context);
-    }
-
-    public function info($message, array $context = []): void
-    {
-        $this->log(LogLevel::INFO, $message, $context);
-    }
-
-    public function debug($message, array $context = []): void
-    {
-        $this->log(LogLevel::DEBUG, $message, $context);
-    }
-
+    /**
+     * @return Psr3StackLogger<NullLogger>
+     */
     public static function makeNullLogger(): self
     {
-        return new self(new \Psr\Log\NullLogger());
+        return new self(new NullLogger());
     }
 }

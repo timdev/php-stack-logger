@@ -12,7 +12,8 @@ use TimDev\StackLogger\StackLogger;
  * TestLoggerTrait to get most of this. You may need to override a method or
  * two, as we do in ExtendedWrappedMonolog.
  *
- * @psalm-type LogRecord = array{message:string, context:array, channel:string, ...}|MonologLogRecord
+ * @phpstan-type LogRecordArray = array{message:string, context:array<mixed>, channel:string, ...}
+ * @phpstan-type LogRecord = LogRecordArray|MonologLogRecord
  */
 interface TestStackLogger extends StackLogger
 {
@@ -24,17 +25,20 @@ interface TestStackLogger extends StackLogger
      *
      * This is the central method of this interface.
      *
-     * @psalm-return array<LogRecord>
+     * @return array<LogRecord>
      */
     public function getRecords(): array;
 
     /* Helper methods for inspecting logged records and logger context. All of
      * these are provided by the provided by the included TestLoggerTrait. */
 
+    /** @return mixed[] */
     public function contextAt(int $recordIndex): array;
 
+    /** @return list<array-key> */
     public function contextKeysAt(int $recordIndex): array;
 
+    /** @return list<mixed> */
     public function contextValuesAt(int $recordIndex): array;
 
     public function contextCountAt(int $recordIndex): int;
@@ -50,6 +54,7 @@ interface TestStackLogger extends StackLogger
 
     /* Methods for inspecting the context tracked by the instance */
 
+    /** @return array<mixed> */
     public function getContext(): array;
 
     public function countContext(): int;

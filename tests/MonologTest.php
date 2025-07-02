@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TimDev\StackLogger\Test;
 
+use TimDev\StackLogger\StackLogger;
 use TimDev\StackLogger\Test\Support\MonologStackLogger;
 
 /**
@@ -31,6 +32,7 @@ class MonologTest extends BaseTestCase
         // ensure the handler has accumulated records with context attached.
         $rec = $log->recordAt(0);
         $this->assertEquals('other', $rec['channel']);
+        $this->assertIsArray($rec['context']);
         $this->assertCount(1, $rec['context']);
         $this->assertEquals('context', $rec['context']['basic']);
 
@@ -92,7 +94,14 @@ class MonologTest extends BaseTestCase
 
         $first->debug('First now has one record with two context');
         $this->assertCount(1, $first->getChannelRecords());
+        $this->assertIsIterable($first->channelRecordAt(0)['context']);
         $this->assertCount(2, $first->channelRecordAt(0)['context']);
         $this->assertEquals(2, $first->contextCountAt(0));
+    }
+
+    public function testNullLoggerFactory(): void
+    {
+        $null = MonologStackLogger::makeNullLogger();
+        $this->assertInstanceOf(\TimDev\StackLogger\MonologStackLogger::class, $null);
     }
 }

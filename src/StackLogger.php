@@ -29,6 +29,4 @@ interface StackLogger extends LoggerInterface
      * @param array<string, mixed> $context
      */
     public function addContext(array $context): static;
-
-    public static function makeNullLogger(): self;
 }

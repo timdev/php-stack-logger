@@ -8,6 +8,7 @@ use Monolog\Handler\TestHandler;
 use Monolog\Logger as MonologLogger;
 use Monolog\LogRecord as MonologRecord;
 use TimDev\StackLogger\MonologStackLogger as BaseMonologStackLogger;
+use TimDev\StackLogger\StackLogger;
 
 /**
  * TestLoggerInterface implementation that extends WrappedMonolog.
