@@ -1,7 +1,6 @@
 {
-    "exclude": [
-        {
-            "name": "README Linting [8.0, latest]"
-        }
-    ]
+    "additional_checks": [{
+      "name": "ECS",
+      "job": {"php": "8.4", "command": "vendor/bin/ecs check --no-progress-bar --no-ansi"}
+    }]
 }
