@@ -29,7 +29,7 @@ decorates a `Monolog\Logger` and provides a working [`withName`] implementation.
 ### Installation
 
 ```bash
-$ composer install timdev/stack-logger
+composer install timdev/stack-logger
 ```
 
 ### Context Stacking
@@ -133,8 +133,8 @@ class SomeService
 
 ## To Do
 
-- [ ] Make MonologStackLogger implement Monolog's ResettableInterface?
-- [ ] Consider how this might play with Laravel, the insanely popular PHP
+* [ ] Make MonologStackLogger implement Monolog's ResettableInterface?
+* [ ] Consider how this might play with Laravel, the insanely popular PHP
       framework that I don't personally use much. PRs welcome.
 
 [similar functionality]: https://getpino.io/#/docs/child-loggers
