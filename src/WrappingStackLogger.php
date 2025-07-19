@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface as PsrInterface;
 
 /**
  * This interface is for StackLogger implementations that wrap some variety of
- * PSR-3 logger. It only really exists so that getNullLogger() can safely do
+ * PSR-3 logger. It only really exists so that makeNullLogger() can safely do
  * `new static(...)`.
  */
 interface WrappingStackLogger extends LoggerInterface

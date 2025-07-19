@@ -5,7 +5,9 @@ Wrap your PSR-3 logger with context accumulation and callable context elements.
 ## Inspiration
 
 Inspired by the [similar functionality] in [pinojs]. Design and implementation
-details differ, but the core idea remains:
+details differ, but the core idea remains: push scoped context on a logger
+and have it automatically pop off when the scope ends. This push/pop behavior is
+why I think of it as a "stack" logger.
 
 ## Approach
 
@@ -17,7 +19,18 @@ additional `withContext` and `addContext` methods defined in this library's
 Also provided is [`MonologStackLogger`](src/MonologStackLogger.php), which
 decorates a `Monolog\Logger` and provides a working [`withName`] implementation.
 
+## Requirements
+
+* PHP >= 8.3
+* A PSR-3 compatible logger, such as [Monolog].
+
 ## Usage
+
+### Installation
+
+```bash
+$ composer install timdev/stack-logger
+```
 
 ### Context Stacking
 
@@ -55,13 +68,13 @@ successive calls.
  */
 function complexProcessing(User $user, \TimDev\StackLogger\StackLogger $logger){
     $logger = $logger->withContext(['user-id' => $user->id]);
-    $logger->info("Begin processing");
+    $logger->info('Begin processing');
     // => [2020-10-17 17:40:53] app.INFO: Begin processing. { "user-id": 123 }
     
     foreach($user->getMemberships() as $membership){
         $l = $logger->withContext(['membership_id'=>$membership->id]);
-        $l->info("Checking membership");
-        // => [2020-10-17 17:40:53] app.INFO: Checking membership. { "user-id": 123, 'membership-id' => 1001 }
+        $l->info('Checking membership');
+        // => [2020-10-17 17:40:53] app.INFO: Checking membership. { "user-id": 123, "membership-id" => 1001 }
         if ($membership->isExpired()){
             $l->info('Membership is expired, stopping early.', ['expired-at' => $membership->expiredAt]);
             // => [2020-10-17 17:40:53] app.INFO: Membership is expired, stopping early. { "user-id": 123, "membership-id" => 1001, "expired-at": "2020-06-30T12:00:00Z' }
@@ -71,7 +84,7 @@ function complexProcessing(User $user, \TimDev\StackLogger\StackLogger $logger){
         $l->info('Done handling membership');        
         // => [2020-10-17 17:40:53] app.INFO: Done handling membership { "user-id": 123, 'membership-id' => 1001 }
     }
-    $logger->info("Finished processing user.");
+    $logger->info('Finished processing user.');
     // => [2020-10-17 17:40:53] app.INFO: Finished processing user. { "user-id": 123 }
 }
 ```
@@ -101,7 +114,7 @@ call, even if the underlying logger is configured to ignore the log-level.
 
 ### NullLoggers
 
-All `StackLogger` implementations provide a static `getNullLogger()` method,
+All `StackLogger` implementations provide a static `makeNullLogger()` method,
 which returns an instance that is configured to discard all log messages. These
 "null loggers" can be handy in tests, or as a default logger in classes that
 can optionally accept a real logger:
@@ -113,7 +126,7 @@ class SomeService
 {
     public function __construct(?MonologStackLogger $logger = null)
     {
-        $this->logger = $logger ?? MonologStackLogger::getNullLogger();
+        $this->logger = $logger ?? MonologStackLogger::makeNullLogger();
     }
 }
 ```
@@ -122,9 +135,10 @@ class SomeService
 
 - [ ] Make MonologStackLogger implement Monolog's ResettableInterface?
 - [ ] Consider how this might play with Laravel, the insanely popular PHP
-      framework that I do my best to avoid. 😜
+      framework that I don't personally use much. PRs welcome.
 
 [similar functionality]: https://getpino.io/#/docs/child-loggers
 [pinojs]: https://github.com/pinojs/pino
 [PSR3 LoggerInterface]: https://www.php-fig.org/psr/psr-3/
 [`withName`]: https://github.com/Seldaek/monolog/blob/a54cd1f1782f62714e4d28651224316bb5540e08/src/Monolog/Logger.php#L163-L172
+[Monolog]: https://github.com/seldaek/monolog
