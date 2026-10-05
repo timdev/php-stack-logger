@@ -2,6 +2,7 @@
 
 namespace TimDev\StackLogger\Test;
 
+use Monolog\LogRecord;
 use TimDev\StackLogger\Test\Support\MonologStackLogger;
 
 /**
@@ -24,6 +25,7 @@ class MonologTest extends BaseTestCase
 
         // ensure the handler has accumulated records with context attached.
         $rec = $log->recordAt(0);
+        self::assertInstanceOf(LogRecord::class, $rec);
         self::assertEquals('other', $rec['channel']);
         self::assertIsArray($rec['context']);
         self::assertCount(1, $rec['context']);

@@ -30,7 +30,6 @@ class Psr3StackLogger extends BasePsr3StackLogger implements TestStackLogger
     {
         /** @var TestLogger $wrapped */
         $wrapped = $this->getWrapped();
-        /** @var array<LogRecord> */
         return $wrapped->records;
     }
 }

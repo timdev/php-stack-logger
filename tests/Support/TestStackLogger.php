@@ -11,7 +11,7 @@ use TimDev\StackLogger\StackLogger;
  * TestLoggerTrait to get most of this. You may need to override a method or
  * two, as we do in ExtendedWrappedMonolog.
  *
- * @phpstan-type LogRecordArray = array{message:string, context:array<mixed>, channel:string, ...}
+ * @phpstan-type LogRecordArray = array{level:int|string, message:string|\Stringable, context:array<mixed>}
  * @phpstan-type LogRecord = LogRecordArray|MonologLogRecord
  */
 interface TestStackLogger extends StackLogger
