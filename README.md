@@ -92,9 +92,13 @@ function complexProcessing(User $user, \TimDev\StackLogger\StackLogger $logger){
 ### Dynamic (Callable) Context
 
 The other feature provided here is callable context. Any context elements that
-are `callable` will be invoked at logging-time, and the result of the
-computation will be logged. Callables take a single array argument:
-`function(array $context): mixed`
+are callable *objects* (closures, or objects with an `__invoke()` method) will be
+invoked at logging-time, and the result of the computation will be logged.
+Callables take a single array argument: `function(array $context): mixed`
+
+Strings and arrays are never invoked, even if they name a callable such as
+`'mail'` or `[SomeClass::class, 'method']`. Context often carries user input,
+and those values are logged as-is.
 
 ```php
 $startTime = microtime(true);

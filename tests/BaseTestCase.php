@@ -97,6 +97,33 @@ abstract class BaseTestCase extends TestCase
         self::assertEquals(['a' => 'Alice'], $this->log->contextAt(1));
     }
 
+    public function testDoesNotInvokeCallableStringsOrArrays(): void
+    {
+        // Context values often come from user input. One that happens to name
+        // a function must be logged verbatim, not called.
+        $this->log->info('Not found.', [
+            'token'  => 'strtoupper',
+            'method' => [\DateTimeImmutable::class, 'createFromFormat'],
+        ]);
+        self::assertEquals(
+            ['token' => 'strtoupper', 'method' => [\DateTimeImmutable::class, 'createFromFormat']],
+            $this->log->contextAt(0),
+        );
+    }
+
+    public function testInvokesInvokableObjects(): void
+    {
+        $invokable = new class {
+            /** @param array<mixed> $ctx */
+            public function __invoke(array $ctx): int
+            {
+                return count($ctx);
+            }
+        };
+        $this->log->info('Invokable.', ['a' => 'b', 'n' => $invokable]);
+        self::assertEquals(2, $this->log->contextAt(0)['n']);
+    }
+
     public function testInvokesCallables(): void
     {
         $logger = $this->log;

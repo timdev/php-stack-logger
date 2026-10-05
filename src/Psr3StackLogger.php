@@ -85,7 +85,11 @@ class Psr3StackLogger implements StackLogger
 
     /**
      * Merges $context on top of the instances accumulated context, and
-     * processes any callable elements in the final context.
+     * invokes any callable objects (closures, invokables) in the final context.
+     *
+     * Strings and arrays are never invoked, even when they happen to name a
+     * callable: context routinely carries user input, and a value like 'mail'
+     * or 'system' must be logged, not called.
      *
      * @param array<mixed> $context
      * @return array<mixed>
@@ -94,8 +98,10 @@ class Psr3StackLogger implements StackLogger
     {
         $context = array_merge($this->mergedContext(), $context);
 
-        // handle any callables in final context.
-        return array_map(static fn($c): mixed => is_callable($c) ? $c($context) : $c, $context);
+        return array_map(
+            static fn($c): mixed => is_object($c) && is_callable($c) ? $c($context) : $c,
+            $context,
+        );
     }
 
     /**
